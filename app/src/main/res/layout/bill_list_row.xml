@@ -1,78 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent"
-    android:focusable="true" android:paddingLeft="11dp" android:paddingRight="11dp" android:paddingTop="5dp"
-    android:paddingBottom="5dp" android:clickable="true" android:background="@drawable/rowxml"
+<android.support.v7.widget.CardView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="1dp"
+    app:cardCornerRadius="1dp" app:cardElevation="1dp"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+<LinearLayout
+    android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="horizontal"
     >
 <TextView
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:textColor="#ff34ff02"
-    android:textSize="25dp"
+    android:textColor="@color/dim_foreground_material_dark"
+    android:text="Test"
+    android:layout_weight="4"
     android:textStyle="bold"
-    android:layout_alignParentTop="true"
     android:id="@+id/productTitle"
     />
-
     <TextView
-        android:layout_below="@id/productTitle"
-        android:layout_width="wrap_content" android:layout_marginBottom="10dp"
-        android:layout_marginTop="2dp"
-        android:layout_height="wrap_content" android:textColor="#ff000000"
-        android:text="Price of the Product:"
-        android:id="@+id/PriceSet"
-        android:textSize="16dp"
-        android:textStyle="bold"/>
-
-    <TextView
-        android:layout_below="@id/productTitle"
-        android:layout_toRightOf="@id/PriceSet"
-        android:layout_width="wrap_content"
-        android:layout_marginTop="2dp"
-        android:layout_height="wrap_content" android:textColor="#ff3615ff"
-        android:text="Price:120" android:layout_marginBottom="10dp"
-        android:textSize="21dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content" android:textColor="#0a1002"
+        android:text="Price" android:layout_weight="2"
         android:id="@+id/priceview"
-        android:textStyle="bold|italic" />
+        />
 
     <TextView
-        android:layout_marginLeft="25dp" android:layout_marginTop="2dp" android:layout_marginBottom="10dp"
-        android:layout_toRightOf="@id/priceview" android:layout_below="@id/productTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="No of Qty:" android:textColor="#ff000000"
-        android:textSize="16dp"
-        android:id="@+id/qtyvieww"
-        android:textStyle="bold"/>
-
-    <TextView
-        android:layout_marginTop="2dp" android:layout_marginBottom="10dp"
-        android:layout_toRightOf="@id/qtyvieww" android:layout_below="@id/productTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" android:textColor="#ff3615ff"
-        android:text="Qty:2"
-        android:textSize="21dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content" android:textColor="#0a1002"
+        android:text="Qty" android:layout_weight="2"
         android:id="@+id/qtyview"
-        android:textStyle="bold|italic" />
-
-
+        />
 
     <TextView
-       android:id="@+id/totalLabel" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Total:"
-        android:textColor="#ff000000" android:textSize="16dp"
-        android:layout_below="@+id/PriceSet"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/totalvalue" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="1400"
-        android:textColor="#ff3615ff"
-        android:textStyle="bold|italic" android:textSize="21dp"
-        android:layout_below="@+id/PriceSet"
-        android:layout_toRightOf="@+id/totalLabel"
-        android:layout_toEndOf="@+id/totalLabel" />
-
-
-
-</RelativeLayout>
+        android:id="@+id/totalvalue" android:layout_weight="2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content" android:text="1400"
+        android:textColor="#0a1002"
+        android:textStyle="bold"
+        />
+</LinearLayout>
+</android.support.v7.widget.CardView>

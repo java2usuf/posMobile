@@ -1,5 +1,6 @@
 package com.ahmed.usuf.billingdesign;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
@@ -17,6 +18,12 @@ import android.view.ViewGroup;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.epson.epos2.Epos2Exception;
+import com.epson.epos2.printer.Printer;
+import com.epson.epos2.printer.PrinterStatusInfo;
+import com.epson.epos2.printer.ReceiveListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,45 +31,42 @@ import java.util.List;
 /**
  * Created by Ahmed-Mariam on 3/30/2016.
  */
-public class ProductAdapter extends android.support.v4.app.Fragment{
+public class ProductAdapter extends android.support.v4.app.Fragment implements ReceiveListener{
 
-   public static List itemList=new ArrayList<ProductDetails>();
+    public RecyclerView recyclerView;
+    public static RecycleViewAdapter mAdapter;
+    public java.util.List<ProductDetails> pDetails;
 
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public ProductAdapter(){
 
     }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        RecyclerView rv = (RecyclerView) inflater.inflate(
-                R.layout.billlist, container, false);
-        setupRecyclerView(rv);
+        View view = inflater.inflate(R.layout.billlist, container, false);
+        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview);
+
+        recyclerView.setHasFixedSize(true);
+        mAdapter=new RecycleViewAdapter(pDetails);
+        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(llm);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(mAdapter);
 
 
-        return rv;
+
+        return view;
     }
 
-    private void setupRecyclerView(RecyclerView recyclerView) {
-        recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
-        List list=new ArrayList<ProductDetails>();
-        for(int i=0;i<=5;i++){
-            list.add(new ProductDetails("1","120","chudi","120"));
-        }
-        recyclerView.addItemDecoration(new ItemDecoration(this.getActivity(), LinearLayoutManager.VERTICAL));
-
-
-        recyclerView.setAdapter(new RecycleViewAdapter(list));
+    @Override
+    public void onResume() {
+        super.onResume();
+        mAdapter.notifyDataSetChanged();
     }
 
+    @Override
+    public void onPtrReceive(Printer printer, int i, PrinterStatusInfo printerStatusInfo, String s) {
 
+    }
 }
