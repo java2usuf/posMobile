@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -17,6 +18,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,6 +40,8 @@ public class MainActivity extends AppCompatActivity implements BillEnterFragment
     BillEnterFragment billEnterFragment;
     int totalCount;
     Printer mPrinter;
+    public static int width;
+    public static int height;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,6 +112,11 @@ public class MainActivity extends AppCompatActivity implements BillEnterFragment
             public void onTabReselected(TabLayout.Tab tab) {
             }
         });
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        width = size.x;
+        height = size.y;
     }
 
     public Context getContext(){

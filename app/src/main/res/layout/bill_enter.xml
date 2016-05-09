@@ -5,16 +5,19 @@
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="?attr/actionBarSize"
         android:orientation="vertical"
         android:paddingLeft="20dp"
+        android:paddingTop="60dp"
         android:paddingRight="20dp"
         >
-
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             app:cardCornerRadius="5dp"
             app:cardElevation="5dp"
             android:layout_margin="5dp"
@@ -25,7 +28,8 @@
 
         <android.support.v7.widget.AppCompatSpinner
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+            style="@style/Widget.AppCompat.Spinner.Underlined"
+        android:layout_height="60dp" android:scrollbarSize="20dp"
             android:id="@+id/productname"
             android:padding="5dp"
 
@@ -34,7 +38,8 @@
         <android.support.v7.widget.AppCompatSpinner
             android:layout_width="match_parent"
             android:layout_marginTop="10dp"
-            android:layout_height="wrap_content"
+            style="@style/Widget.AppCompat.Spinner.Underlined"
+            android:layout_height="60dp"
             android:id="@+id/qtyspinner"
             android:padding="5dp"
             />
@@ -50,6 +55,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="number"
+                android:imeOptions="actionDone"
                 android:singleLine="true"
                 android:hint="Price" />
         </android.support.design.widget.TextInputLayout>
@@ -72,7 +78,7 @@
 
 
 
-
+</ScrollView>
 
     </LinearLayout>
     <android.support.design.widget.FloatingActionButton

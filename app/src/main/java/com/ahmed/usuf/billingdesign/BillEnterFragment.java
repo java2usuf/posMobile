@@ -28,6 +28,7 @@ import java.util.List;
  */
 public class BillEnterFragment extends Fragment {
 
+    private static int total;
     String[] productNames={"CHUDI","CHUDI MATERIAL","BRA","BABYS","PANT&SSHIRTS","KIDS","FORG","UNDERWEAR","PANTYS","VEST","TOPS","LEGINS"};
     String[] qt={"1","2","3","4","5","6","7","8","9","10"};
     EditText prc,tot;
@@ -103,6 +104,13 @@ public class BillEnterFragment extends Fragment {
                 pName.setSelection(0);
                 prc.setText("");
                 tot.setText("");
+
+                int totalCount =  0;
+                for (ProductDetails details:list){
+                    totalCount+=Integer.parseInt(details.getTotal());
+                }
+                total=totalCount;
+
             }
         });
 
@@ -158,6 +166,11 @@ public class BillEnterFragment extends Fragment {
             }
         });
         return v;
+    }
+
+    public static int getTotal(){
+
+        return  total;
     }
 
     @Override
