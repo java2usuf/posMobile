@@ -9,6 +9,8 @@
         android:layout_marginTop="?attr/actionBarSize"
         android:orientation="vertical"
         android:paddingLeft="20dp"
+        android:descendantFocusability="beforeDescendants"
+        android:focusableInTouchMode="true"
         android:paddingTop="60dp"
         android:paddingRight="20dp"
         >
@@ -25,6 +27,39 @@
         <LinearLayout
             android:layout_width="match_parent" android:orientation="vertical"
             android:layout_height="wrap_content">
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/pricelayout"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/pricelabel"
+                    android:focusableInTouchMode="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:imeOptions="actionDone"
+                    android:singleLine="true"
+                    android:hint="Price" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/totallayout"
+                android:layout_width="match_parent"
+                android:layout_marginTop="10dp"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/totalLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:focusable="false"
+
+                    android:hint="Total" />
+            </android.support.design.widget.TextInputLayout>
 
         <android.support.v7.widget.AppCompatSpinner
         android:layout_width="match_parent"
@@ -44,35 +79,7 @@
             android:padding="5dp"
             />
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/pricelayout"
-            android:layout_marginTop="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
 
-            <EditText
-                android:id="@+id/pricelabel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="number"
-                android:imeOptions="actionDone"
-                android:singleLine="true"
-                android:hint="Price" />
-        </android.support.design.widget.TextInputLayout>
-
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/totallayout"
-            android:layout_width="match_parent"
-            android:layout_marginTop="10dp"
-            android:layout_height="wrap_content">
-
-            <EditText
-                android:id="@+id/totalLabel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="number"
-                android:hint="Total" />
-        </android.support.design.widget.TextInputLayout>
         </LinearLayout>
         </android.support.v7.widget.CardView>
 
@@ -82,20 +89,16 @@
 
     </LinearLayout>
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab" android:onClick="fab"
+        android:id="@+id/fab"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" android:background="@android:color/holo_blue_bright"
-        android:layout_gravity="start|bottom"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        app:fabSize="mini"
+        app:pressedTranslationZ="20dp"
+        android:backgroundTintMode="@android:color/holo_blue_light"
         android:layout_margin="@dimen/fab_margin"
         android:src="@android:drawable/ic_input_add"/>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab2" android:onClick="bill"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:backgroundTint="@android:color/holo_blue_dark"
-        android:layout_gravity="end|bottom"
-        android:layout_margin="@dimen/fab_margin"
-        android:src="@android:drawable/ic_menu_agenda"/>
+
 
 </android.support.design.widget.CoordinatorLayout>

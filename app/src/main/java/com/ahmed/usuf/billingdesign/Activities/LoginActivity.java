@@ -1,21 +1,17 @@
-package com.ahmed.usuf.billingdesign;
+package com.ahmed.usuf.billingdesign.Activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.ahmed.usuf.billingdesign.R;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -96,6 +92,7 @@ public class LoginActivity extends AppCompatActivity {
             if(user.equals(credentials[0].toString())&pass.equals(credentials[1].toString())){
                 Intent i=new Intent(this,MainActivity.class);
                 startActivity(i);
+                finish();
             }else {
                 Toast.makeText(getApplicationContext(), "Access not Granted", Toast.LENGTH_SHORT).show();
             }
