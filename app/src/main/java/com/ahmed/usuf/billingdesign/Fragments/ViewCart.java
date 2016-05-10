@@ -1,10 +1,7 @@
 package com.ahmed.usuf.billingdesign.Fragments;
 
-import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,7 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.ahmed.usuf.billingdesign.Adapters.ProductDetails;
+import com.ahmed.usuf.billingdesign.Adapters.LineItem;
 import com.ahmed.usuf.billingdesign.R;
 import com.ahmed.usuf.billingdesign.Adapters.RecycleViewAdapter;
 import com.epson.epos2.printer.Printer;
@@ -22,13 +19,13 @@ import com.epson.epos2.printer.ReceiveListener;
 /**
  * Created by Ahmed-Mariam on 3/30/2016.
  */
-public class ProductAdapter extends android.support.v4.app.Fragment implements ReceiveListener{
+public class ViewCart extends android.support.v4.app.Fragment implements ReceiveListener{
 
     public RecyclerView recyclerView;
     public static RecycleViewAdapter mAdapter;
-    public java.util.List<ProductDetails> pDetails;
+    public java.util.List<LineItem> pDetails;
 
-    public ProductAdapter(){
+    public ViewCart(){
 
     }
     @Nullable

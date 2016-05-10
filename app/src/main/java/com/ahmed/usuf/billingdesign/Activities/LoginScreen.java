@@ -13,7 +13,7 @@ import android.widget.Toast;
 
 import com.ahmed.usuf.billingdesign.R;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginScreen extends AppCompatActivity {
 
 
         //DUMMY CREDENTIALS
@@ -21,7 +21,7 @@ public class LoginActivity extends AppCompatActivity {
         private android.os.Handler handler;
         private EditText user_ed,pass_ed;
         private TextView safire;
-        MainActivity m=new MainActivity();
+        HomeScreen m=new HomeScreen();
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -90,7 +90,7 @@ public class LoginActivity extends AppCompatActivity {
             }
             String user=user_ed.getText().toString(),pass=pass_ed.getText().toString();
             if(user.equals(credentials[0].toString())&pass.equals(credentials[1].toString())){
-                Intent i=new Intent(this,MainActivity.class);
+                Intent i=new Intent(this,HomeScreen.class);
                 startActivity(i);
                 finish();
             }else {

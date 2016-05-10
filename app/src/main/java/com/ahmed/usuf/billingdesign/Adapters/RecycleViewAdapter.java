@@ -10,8 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.ahmed.usuf.billingdesign.Activities.MainActivity;
-import com.ahmed.usuf.billingdesign.Fragments.BillEnterFragment;
+import com.ahmed.usuf.billingdesign.Activities.HomeScreen;
+import com.ahmed.usuf.billingdesign.Fragments.AddItem;
 import com.ahmed.usuf.billingdesign.R;
 
 import java.util.List;
@@ -20,10 +20,10 @@ import java.util.List;
  * Created by Ahmed-Mariam on 3/31/2016.
  */
 public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.MyViewHolder> {
-    public static List<ProductDetails> itemList;
-    BillEnterFragment bill;
+    public static List<LineItem> itemList;
+    AddItem bill;
     public RecycleViewAdapter() {
-    bill=new BillEnterFragment();
+    bill=new AddItem();
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -35,14 +35,14 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
             qtyView= (TextView) view.findViewById(R.id.qtyview);
             priceView = (TextView) view.findViewById(R.id.priceview);
             totalView=(TextView) view.findViewById(R.id.totalvalue);
-            totalView.setWidth(MainActivity.width);
+            totalView.setWidth(HomeScreen.width);
         }
     }
 
-    public RecycleViewAdapter(List<ProductDetails> moviesList) {
+    public RecycleViewAdapter(List<LineItem> moviesList) {
         try {
             this.itemList = moviesList;
-            bill=new BillEnterFragment();
+            bill=new AddItem();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -64,10 +64,10 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         holder.itemName.setVisibility(View.VISIBLE);
         holder.priceView.setVisibility(View.VISIBLE);
         holder.qtyView.setVisibility(View.VISIBLE);
-        holder.itemName.setWidth(MainActivity.width / 4);
-        holder.qtyView.setWidth(MainActivity.width/2);
-        holder.priceView.setWidth(MainActivity.width / 2);
-        holder.totalView.setWidth(MainActivity.width / 2);
+        holder.itemName.setWidth(HomeScreen.width / 4);
+        holder.qtyView.setWidth(HomeScreen.width/2);
+        holder.priceView.setWidth(HomeScreen.width / 2);
+        holder.totalView.setWidth(HomeScreen.width / 2);
         holder.totalView.setTextColor(Color.BLACK);
         holder.totalView.setGravity(Gravity.START);
         holder.itemName.setTextSize(16);
@@ -90,7 +90,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         }
         if(position+1<itemList.size()+2&&position>0) {
             Log.d("position2", "pos" + position);
-            ProductDetails details = itemList.get(position - 1);
+            LineItem details = itemList.get(position - 1);
             holder.itemName.setText(details.getProductName());
             holder.priceView.setText(details.getPrice());
             holder.qtyView.setText(details.getQty());
@@ -103,16 +103,16 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
             holder.itemName.setVisibility(View.GONE);
             holder.priceView.setVisibility(View.GONE);
             holder.qtyView.setVisibility(View.GONE);
-            holder.totalView.setWidth(MainActivity.width);
+            holder.totalView.setWidth(HomeScreen.width);
             holder.totalView.setGravity(Gravity.CENTER_HORIZONTAL);
             holder.totalView.setTextColor(Color.RED);
-            holder.totalView.setText("$ "+BillEnterFragment.getTotal());
+            holder.totalView.setText("$ "+ AddItem.getTotal());
         }
     }
 
-    public void swap(List<ProductDetails> list){
+    public void swap(List<LineItem> list){
             itemList=list;
-        bill=new BillEnterFragment();
+        bill=new AddItem();
             notifyDataSetChanged();
     }
 

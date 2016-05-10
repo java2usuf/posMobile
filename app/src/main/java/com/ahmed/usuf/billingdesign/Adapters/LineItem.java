@@ -3,13 +3,13 @@ package com.ahmed.usuf.billingdesign.Adapters;
 /**
  * Created by Ahmed-Mariam on 3/30/2016.
  */
-public class ProductDetails {
+public class LineItem {
     private String qty;
     private String price;
     private String total;
     private String productName;
 
-    public ProductDetails(String qty,String price,String productName,String total){
+    public LineItem(String qty, String price, String productName, String total){
         this.qty=qty;
         this.productName=productName;
         this.price=price;

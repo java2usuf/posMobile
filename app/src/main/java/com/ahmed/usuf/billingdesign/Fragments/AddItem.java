@@ -20,7 +20,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 
-import com.ahmed.usuf.billingdesign.Adapters.ProductDetails;
+import com.ahmed.usuf.billingdesign.Adapters.LineItem;
 import com.ahmed.usuf.billingdesign.R;
 import com.ahmed.usuf.billingdesign.Adapters.RecycleViewAdapter;
 
@@ -30,7 +30,7 @@ import java.util.List;
 /**
  * Created by Ahmed-Mariam on 4/1/2016.
  */
-public class BillEnterFragment extends Fragment {
+public class AddItem extends Fragment {
 
     private static int total;
     String[] productNames={"CHUDI","CHUDI MATERIAL","BRA","BABYS","PANT&SSHIRTS","KIDS","FORG","UNDERWEAR","PANTYS","VEST","TOPS","LEGINS"};
@@ -39,9 +39,9 @@ public class BillEnterFragment extends Fragment {
 
 
     AppCompatSpinner pName,qty;
-    ProductAdapter productAdapter;
-    public List<ProductDetails> list;
-    public static List<ProductDetails> printerList;
+    ViewCart productAdapter;
+    public List<LineItem> list;
+    public static List<LineItem> printerList;
     netTotalCallBack callBack;
 
     String selectedItem,slectedQty;
@@ -98,7 +98,7 @@ public class BillEnterFragment extends Fragment {
         final RecycleViewAdapter recycleViewAdapter=new RecycleViewAdapter();
 
         FloatingActionButton fab=(FloatingActionButton)v.findViewById(R.id.fab);
-        list=new ArrayList<ProductDetails>();
+        list=new ArrayList<LineItem>();
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -112,17 +112,17 @@ public class BillEnterFragment extends Fragment {
                     prc.setError("Please Enter Product price");
                 }else{
                     prc.setError(null);
-                    Toast.makeText(BillEnterFragment.this.getActivity(), "Adding to the Cart1", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddItem.this.getActivity(), "Adding to the Cart1", Toast.LENGTH_SHORT).show();
                     //  Log.d("Ahmed", "ListSize:" + RecycleViewAdapter.itemList.size());
-                    list.add(new ProductDetails(qty.getSelectedItem().toString(), prc.getText().toString(), pName.getSelectedItem().toString(), tot.getText().toString()));
-                    ProductAdapter.mAdapter.swap(list);
+                    list.add(new LineItem(qty.getSelectedItem().toString(), prc.getText().toString(), pName.getSelectedItem().toString(), tot.getText().toString()));
+                    ViewCart.mAdapter.swap(list);
                     qty.setSelection(0);
                     pName.setSelection(0);
                     prc.setText("");
                     tot.setText("");
 
                     int totalCount =  0;
-                    for (ProductDetails details:list){
+                    for (LineItem details:list){
                         totalCount+=Integer.parseInt(details.getTotal());
                     }
                     total=totalCount;

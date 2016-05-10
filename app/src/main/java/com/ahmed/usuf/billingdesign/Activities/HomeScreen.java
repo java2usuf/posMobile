@@ -23,9 +23,9 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 
-import com.ahmed.usuf.billingdesign.Fragments.BillEnterFragment;
-import com.ahmed.usuf.billingdesign.Fragments.ProductAdapter;
-import com.ahmed.usuf.billingdesign.Adapters.ProductDetails;
+import com.ahmed.usuf.billingdesign.Fragments.AddItem;
+import com.ahmed.usuf.billingdesign.Fragments.ViewCart;
+import com.ahmed.usuf.billingdesign.Adapters.LineItem;
 import com.ahmed.usuf.billingdesign.R;
 import com.epson.epos2.Epos2Exception;
 import com.epson.epos2.printer.Printer;
@@ -36,10 +36,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainActivity extends AppCompatActivity implements BillEnterFragment.netTotalCallBack,ReceiveListener{
+public class HomeScreen extends AppCompatActivity implements AddItem.netTotalCallBack,ReceiveListener{
 
     EditText prc,tot;
-    BillEnterFragment billEnterFragment;
+    AddItem billEnterFragment;
     int totalCount;
     Printer mPrinter;
     public static int width;
@@ -65,15 +65,15 @@ public class MainActivity extends AppCompatActivity implements BillEnterFragment
                 try {
                     mPrinter = new Printer(Printer.TM_T82,
                             Printer.MODEL_CHINESE,
-                            MainActivity.this);
+                            HomeScreen.this);
 
-                    mPrinter.setReceiveEventListener(MainActivity.this);
+                    mPrinter.setReceiveEventListener(HomeScreen.this);
 
                     StringBuilder textData = new StringBuilder();
-                    for (ProductDetails details : BillEnterFragment.printerList) {
+                    for (LineItem details : AddItem.printerList) {
                         textData.append(details.getProductName() + "\t" + details.getPrice() + "\t" + details.getQty() + "\t" + details.getTotal() + "\n");
                     }
-                    Log.d("Ahmed", "Data:" + textData);
+                    Log.d("Ahmed---", "Data:" + textData);
                     mPrinter.addText(textData.toString());
                     mPrinter.addCut(Printer.CUT_FEED);
 
@@ -197,8 +197,8 @@ public class MainActivity extends AppCompatActivity implements BillEnterFragment
 
     private void setupViewPager(ViewPager viewPager) {
         Adapter adapter = new Adapter(getSupportFragmentManager());
-        adapter.addFragment(new BillEnterFragment(),"Bill It!!");
-        adapter.addFragment(new ProductAdapter(),"Bill Details");
+        adapter.addFragment(new AddItem(),"Bill It!!");
+        adapter.addFragment(new ViewCart(),"Bill Details");
         viewPager.setAdapter(adapter);
     }
 
