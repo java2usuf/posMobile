@@ -2,18 +2,67 @@
 <items version="2" >
 
     <item
-        jar="/Users/myousuff/work/Personal/Andriod/posMobile/app/libs/ePOS2.jar"
+        jar="C:\Users\Ahmed\Desktop\posMobile\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.1.1\jars\libs\internal_impl-23.1.1.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="a4de9c81ae239414e1ed0f86441b02abaf29bca9">
+        <dex dex="C:\Users\Ahmed\Desktop\posMobile\app\build\intermediates\pre-dexed\debug\internal_impl-23.1.1-4c680af8264b0fcfbe67d6c054762b9d1d8373bf.jar" />
+    </item>
+    <item
+        jar="C:\Users\Ahmed\Desktop\posMobile\app\build\intermediates\exploded-aar\com.android.support\cardview-v7\23.1.1\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="5e412e954a24c5310a459c09870e4e2081aceb03">
+        <dex dex="C:\Users\Ahmed\Desktop\posMobile\app\build\intermediates\pre-dexed\debug\classes-9bd15c3133af44a84be98e9825808ce9b1a7492a.jar" />
+    </item>
+    <item
+        jar="C:\Users\Ahmed\Desktop\posMobile\app\build\intermediates\exploded-aar\com.android.support\design\23.1.1\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="379471b2bd17d9737c050345c08e8c7d16589784">
+        <dex dex="C:\Users\Ahmed\Desktop\posMobile\app\build\intermediates\pre-dexed\debug\classes-2f1f6dadac7eaca09e9459f31db3f61a0b20d76f.jar" />
+    </item>
+    <item
+        jar="F:\sdk\extras\android\m2repository\com\android\support\support-annotations\23.1.1\support-annotations-23.1.1.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="8d680ba5a623724d1fb0e81c36a790f023a6cede">
+        <dex dex="C:\Users\Ahmed\Desktop\posMobile\app\build\intermediates\pre-dexed\debug\support-annotations-23.1.1-978a04377b659756670912eacd95c9c42c5ef577.jar" />
+    </item>
+    <item
+        jar="C:\Users\Ahmed\Desktop\posMobile\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.1.1\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="6cbc7773921fcfedbe55657578f0cbfe614778dc">
+        <dex dex="C:\Users\Ahmed\Desktop\posMobile\app\build\intermediates\pre-dexed\debug\classes-75be78565e7159ef104335a69f95325259eeb172.jar" />
+    </item>
+    <item
+        jar="C:\Users\Ahmed\Desktop\posMobile\app\build\intermediates\exploded-aar\com.android.support\recyclerview-v7\23.1.1\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="09c5e804bc67fc0580360043dff067df574a60d4">
+        <dex dex="C:\Users\Ahmed\Desktop\posMobile\app\build\intermediates\pre-dexed\debug\classes-1fd5614d7b09026605f7aece397a709d36ab04bb.jar" />
+    </item>
+    <item
+        jar="C:\Users\Ahmed\Desktop\posMobile\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\23.1.1\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="5c5699834e9722f1c288fea2de82725d078ba127">
+        <dex dex="C:\Users\Ahmed\Desktop\posMobile\app\build\intermediates\pre-dexed\debug\classes-8912ce14728f36eb8c51b0a660f3480aa2886767.jar" />
+    </item>
+    <item
+        jar="C:\Users\Ahmed\Desktop\posMobile\app\libs\ePOS2.jar"
         jumboMode="false"
         revision="23.0.2"
         sha1="4ee37eedd7c587a99c6fd3f46148180083fc870b">
-        <dex dex="/Users/myousuff/work/Personal/Andriod/posMobile/app/build/intermediates/pre-dexed/debug/ePOS2-2f4377ff0e93f27c7062a527a54c8caf6f7e64ec.jar" />
+        <dex dex="C:\Users\Ahmed\Desktop\posMobile\app\build\intermediates\pre-dexed\debug\ePOS2-03b3b4019a8a7e1cc1c1cb66355cc779f659c962.jar" />
     </item>
     <item
-        jar="/Users/myousuff/.gradle/caches/modules-2/files-2.1/com.google.guava/guava/19.0/6ce200f6b23222af3d8abb6b6459e6c44f4bb0e9/guava-19.0.jar"
+        jar="C:\Users\Ahmed\.gradle\caches\modules-2\files-2.1\com.google.guava\guava\19.0\6ce200f6b23222af3d8abb6b6459e6c44f4bb0e9\guava-19.0.jar"
         jumboMode="false"
         revision="23.0.2"
         sha1="6ce200f6b23222af3d8abb6b6459e6c44f4bb0e9">
-        <dex dex="/Users/myousuff/work/Personal/Andriod/posMobile/app/build/intermediates/pre-dexed/debug/guava-19.0-e4535a5471ee09831d6df025860568502051a378.jar" />
+        <dex dex="C:\Users\Ahmed\Desktop\posMobile\app\build\intermediates\pre-dexed\debug\guava-19.0-e07f445997899a2b8d3825543efd260c5c5f661c.jar" />
     </item>
 
 </items>
