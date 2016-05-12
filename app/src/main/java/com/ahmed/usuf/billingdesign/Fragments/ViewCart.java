@@ -21,6 +21,7 @@ import com.epson.epos2.printer.ReceiveListener;
  */
 public class ViewCart extends android.support.v4.app.Fragment implements ReceiveListener{
 
+
     public RecyclerView recyclerView;
     public static RecycleViewAdapter mAdapter;
     public java.util.List<LineItem> pDetails;

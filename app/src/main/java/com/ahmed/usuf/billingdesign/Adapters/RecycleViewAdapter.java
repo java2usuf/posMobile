@@ -22,8 +22,10 @@ import java.util.List;
 public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.MyViewHolder> {
     public static List<LineItem> itemList;
     AddItem bill;
+    int rowLength;
+
     public RecycleViewAdapter() {
-    bill=new AddItem();
+        bill = new AddItem();
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -32,9 +34,9 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         public MyViewHolder(View view) {
             super(view);
             itemName = (TextView) view.findViewById(R.id.productTitle);
-            qtyView= (TextView) view.findViewById(R.id.qtyview);
+            qtyView = (TextView) view.findViewById(R.id.qtyview);
             priceView = (TextView) view.findViewById(R.id.priceview);
-            totalView=(TextView) view.findViewById(R.id.totalvalue);
+            totalView = (TextView) view.findViewById(R.id.totalvalue);
             totalView.setWidth(HomeScreen.width);
         }
     }
@@ -42,7 +44,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     public RecycleViewAdapter(List<LineItem> moviesList) {
         try {
             this.itemList = moviesList;
-            bill=new AddItem();
+            bill = new AddItem();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -55,17 +57,17 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 
         return new MyViewHolder(itemView);
     }
-
+    int count=0;
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        Log.d("ahmed", "ahmedBindViewHolder");
-        Log.d("pos", "pos" + position);
 
+        Log.d("ahmed", "Checking Discount Boolean"+count +""+ HomeScreen.isDiscountSet);
+        count++;
         holder.itemName.setVisibility(View.VISIBLE);
         holder.priceView.setVisibility(View.VISIBLE);
         holder.qtyView.setVisibility(View.VISIBLE);
         holder.itemName.setWidth(HomeScreen.width / 4);
-        holder.qtyView.setWidth(HomeScreen.width/2);
+        holder.qtyView.setWidth(HomeScreen.width / 2);
         holder.priceView.setWidth(HomeScreen.width / 2);
         holder.totalView.setWidth(HomeScreen.width / 2);
         holder.totalView.setTextColor(Color.BLACK);
@@ -76,8 +78,8 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         holder.totalView.setTextSize(16);
 
 
-        if (position==0){
-            Log.d("position1", "pos" + position);
+        if (position == 0) {
+            Log.d("ahmed", "if pos:" + position);
 
             holder.itemName.setText("Product Name");
             holder.itemName.setTypeface(null, Typeface.BOLD);
@@ -88,40 +90,98 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
             holder.qtyView.setText("Qty");
             holder.totalView.setText("Total");
         }
-        if(position+1<itemList.size()+2&&position>0) {
-            Log.d("position2", "pos" + position);
-            LineItem details = itemList.get(position - 1);
-            holder.itemName.setText(details.getProductName());
-            holder.priceView.setText(details.getPrice());
-            holder.qtyView.setText(details.getQty());
-            holder.totalView.setText(details.getTotal());
+        if (HomeScreen.isDiscountSet){
+            Log.d("ahmed", "Checking Discount Boolean" + HomeScreen.isDiscountSet);
+            if (position + 1 < rowLength - 3 && position > 0) {
+                Log.d("ahmed", "pos" + position);
+                LineItem details = itemList.get(position - 1);
+                holder.itemName.setText(details.getProductName());
+                holder.priceView.setText(details.getPrice());
+                holder.qtyView.setText(details.getQty());
+                holder.totalView.setText(details.getTotal());
+
+            }
+            if (position + 1 == rowLength) {
+                Log.d("position3", "pos" + position);
+                holder.totalView.setTextSize(70);
+                holder.itemName.setVisibility(View.GONE);
+                holder.priceView.setVisibility(View.GONE);
+                holder.qtyView.setVisibility(View.GONE);
+                holder.totalView.setWidth(HomeScreen.width);
+                holder.totalView.setGravity(Gravity.CENTER_HORIZONTAL);
+                holder.totalView.setTextColor(Color.RED);
+                holder.totalView.setText("$ " + HomeScreen.discountTotal);
+            }
+        }else{
+            if (position + 1 < rowLength && position > 0) {
+                Log.d("position2", "pos" + position);
+                LineItem details = itemList.get(position - 1);
+                holder.itemName.setText(details.getProductName());
+                holder.priceView.setText(details.getPrice());
+                holder.qtyView.setText(details.getQty());
+                holder.totalView.setText(details.getTotal());
+
+            }
+            if (position + 1 == rowLength) {
+                Log.d("position3", "pos" + position);
+                holder.totalView.setTextSize(70);
+                holder.itemName.setVisibility(View.GONE);
+                holder.priceView.setVisibility(View.GONE);
+                holder.qtyView.setVisibility(View.GONE);
+                holder.totalView.setWidth(HomeScreen.width);
+                holder.totalView.setGravity(Gravity.CENTER_HORIZONTAL);
+                holder.totalView.setTextColor(Color.RED);
+                holder.totalView.setText("$ " + AddItem.getTotal());
+            }
 
         }
-        if(position+1==itemList.size()+2){
+
+        if (position + 1 == rowLength - 2&&HomeScreen.isDiscountSet) {
             Log.d("position3", "pos" + position);
-            holder.totalView.setTextSize(70);
             holder.itemName.setVisibility(View.GONE);
             holder.priceView.setVisibility(View.GONE);
             holder.qtyView.setVisibility(View.GONE);
             holder.totalView.setWidth(HomeScreen.width);
             holder.totalView.setGravity(Gravity.CENTER_HORIZONTAL);
-            holder.totalView.setTextColor(Color.RED);
-            holder.totalView.setText("$ "+ AddItem.getTotal());
+            holder.totalView.setTextColor(Color.BLACK);
+            holder.totalView.setText("SubTotal: " + AddItem.getTotal());
+        }
+
+        if (position + 1 == rowLength - 1&&HomeScreen.isDiscountSet) {
+            Log.d("position3", "pos" + position);
+            holder.itemName.setVisibility(View.GONE);
+            holder.priceView.setVisibility(View.GONE);
+            holder.qtyView.setVisibility(View.GONE);
+            holder.totalView.setWidth(HomeScreen.width);
+            holder.totalView.setGravity(Gravity.CENTER_HORIZONTAL);
+            holder.totalView.setTextColor(Color.BLACK);
+            holder.totalView.setText("Less: " + HomeScreen.reducedAmount);
         }
     }
 
-    public void swap(List<LineItem> list){
-            itemList=list;
-        bill=new AddItem();
-            notifyDataSetChanged();
+    public void swap(List<LineItem> list) {
+        itemList = list;
+        bill = new AddItem();
+        notifyDataSetChanged();
     }
 
-    public void notifyData(){
+    public void notifyData() {
         notifyDataSetChanged();
     }
 
     @Override
     public int getItemCount() {
-       return itemList==null?0:itemList.size()+2;
-}
+        try {
+            if (itemList.size() == 0) {
+                return 0;
+            } else if (itemList != null && HomeScreen.isDiscountSet) {
+                rowLength = itemList.size() + 4;
+                return rowLength;
+            } else {
+                rowLength = itemList.size() + 2;
+                return rowLength;
+            }
+        }catch (Exception e){return 0;}
+
+    }
 }

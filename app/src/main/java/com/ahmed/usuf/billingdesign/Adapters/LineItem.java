@@ -6,14 +6,26 @@ package com.ahmed.usuf.billingdesign.Adapters;
 public class LineItem {
     private String qty;
     private String price;
+    private String billNo;
+
+    public LineItem(String qty, String price, String billNo, String total, String productName) {
+        this.qty = qty;
+        this.price = price;
+        this.billNo = billNo;
+        this.total = total;
+        this.productName = productName;
+    }
+
     private String total;
     private String productName;
 
-    public LineItem(String qty, String price, String productName, String total){
-        this.qty=qty;
-        this.productName=productName;
-        this.price=price;
-        this.total=total;
+    public String getBillNo() {
+
+        return billNo;
+    }
+
+    public void setBillNo(String billNo) {
+        this.billNo = billNo;
     }
 
     public void setPrice(String price) {

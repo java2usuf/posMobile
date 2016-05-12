@@ -13,6 +13,7 @@ import android.view.View;
  * Created by Zumi on 01-04-2016.
  */
 public class ItemDecoration extends RecyclerView.ItemDecoration {
+
     private static final int[] ATTRS = new int[]{
             android.R.attr.listDivider
     };

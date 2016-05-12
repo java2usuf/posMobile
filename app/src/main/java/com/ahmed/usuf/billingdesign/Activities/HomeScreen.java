@@ -1,8 +1,10 @@
 package com.ahmed.usuf.billingdesign.Activities;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -14,14 +16,19 @@ import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ahmed.usuf.billingdesign.Fragments.AddItem;
 import com.ahmed.usuf.billingdesign.Fragments.ViewCart;
@@ -36,14 +43,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class HomeScreen extends AppCompatActivity implements AddItem.netTotalCallBack,ReceiveListener{
+public class HomeScreen extends AppCompatActivity implements AddItem.netTotalCallBack, ReceiveListener {
 
-    EditText prc,tot;
+    EditText prc, tot;
     AddItem billEnterFragment;
     int totalCount;
     Printer mPrinter;
     public static int width;
     public static int height;
+    SharedPreferences sharedpreferences;
+    public static int discountTotal, reducedAmount;
+    public static boolean isDiscountSet = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,13 +65,17 @@ public class HomeScreen extends AppCompatActivity implements AddItem.netTotalCal
             setupViewPager(viewPager);
         }
 
-        prc=(EditText)findViewById(R.id.pricelabel);
-        tot=(EditText)findViewById(R.id.totalLabel);
+        prc = (EditText) findViewById(R.id.pricelabel);
+        tot = (EditText) findViewById(R.id.totalLabel);
 
-        final FloatingActionButton fab=(FloatingActionButton)findViewById(R.id.fab);
+        sharedpreferences = getSharedPreferences("MyPref", Context.MODE_PRIVATE);
+        final SharedPreferences.Editor editor = sharedpreferences.edit();
+
+        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Intent intent = null;
                 try {
                     mPrinter = new Printer(Printer.TM_T82,
@@ -87,10 +102,28 @@ public class HomeScreen extends AppCompatActivity implements AddItem.netTotalCal
                 } catch (Epos2Exception e) {
                     e.printStackTrace();
                 }
+                AddItem.billCount++;
+                editor.putInt("billno", AddItem.billCount);
+                editor.commit();
+                /*AddItem item = new AddItem();
+
+                if (sharedpreferences.contains("billno"))
+                    item.billno.setText(sharedpreferences.getInt("billno", 0));*/
+                List<LineItem> list = new ArrayList<LineItem>();
+                ViewCart.mAdapter.swap(list);
+            }
+        });
+
+        FloatingActionButton fab2 = (FloatingActionButton) findViewById(R.id.discount);
+        fab2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                discountDialog();
             }
         });
         fab.setVisibility(View.GONE);
-        final FrameLayout frame=(FrameLayout)findViewById(R.id.frame);
+        final FrameLayout frame = (FrameLayout) findViewById(R.id.frame);
+        frame.setVisibility(View.GONE);
         final TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -135,6 +168,55 @@ public class HomeScreen extends AppCompatActivity implements AddItem.netTotalCal
         height = size.y;
     }
 
+    private void discountDialog() {
+        // custom dialog
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.discount);
+        dialog.setTitle("Enter Percentage or Price to Discount");
+        final EditText price, percentage;
+        price = (EditText) dialog.findViewById(R.id.pricediscount);
+        percentage = (EditText) dialog.findViewById(R.id.percentage);
+
+        Button dialogButton = (Button) dialog.findViewById(R.id.calculate);
+        // if button is clicked, close the custom dialog
+        dialogButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (price.getText().toString() == null && percentage.getText().toString() == null) {
+                    Toast.makeText(HomeScreen.this, "Fill any one Fiels", Toast.LENGTH_LONG).show();
+                } else {
+                    if (price.getText().toString().isEmpty()) {
+                        int total = billEnterFragment.getTotal();
+                        int percent = Integer.parseInt(percentage.getText().toString());
+                        Toast.makeText(HomeScreen.this, percent + "=percent", Toast.LENGTH_LONG).show();
+                        int p = percent / 100;
+                        Toast.makeText(HomeScreen.this, p + "", Toast.LENGTH_LONG).show();
+                        int result = total * p;
+                        reducedAmount = result;
+                        total -= result;
+                        discountTotal = total;
+                        isDiscountSet = true;
+                        price.setEnabled(false);
+                        ViewCart.mAdapter.swap(AddItem.printerList);
+                        dialog.dismiss();
+                    }
+
+                    if (percentage.getText().toString().isEmpty()) {
+                        int total = billEnterFragment.getTotal();
+                        reducedAmount = Integer.parseInt(price.getText().toString());
+                        total -= reducedAmount;
+                        discountTotal = total;
+                        isDiscountSet = true;
+                        percentage.setEnabled(false);
+                        ViewCart.mAdapter.swap(AddItem.printerList);
+                        dialog.dismiss();
+                    }
+                }
+            }
+        });
+        dialog.show();
+    }
+
     private void confirmExit() {
 
         Context context = this;
@@ -173,6 +255,7 @@ public class HomeScreen extends AppCompatActivity implements AddItem.netTotalCal
         InputMethodManager keyboard = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         keyboard.hideSoftInputFromWindow(v.getWindowToken(), 0);
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -197,15 +280,15 @@ public class HomeScreen extends AppCompatActivity implements AddItem.netTotalCal
 
     private void setupViewPager(ViewPager viewPager) {
         Adapter adapter = new Adapter(getSupportFragmentManager());
-        adapter.addFragment(new AddItem(),"Bill It!!");
-        adapter.addFragment(new ViewCart(),"Bill Details");
+        adapter.addFragment(new AddItem(), "Bill It!!");
+        adapter.addFragment(new ViewCart(), "Bill Details");
         viewPager.setAdapter(adapter);
     }
 
     @Override
     public void displaySnackView(String s) {
-        View v=(View)findViewById(R.id.fab);
-        Snackbar.make(v,"Net Total: "+s,Snackbar.LENGTH_LONG).setAction("Action",null).show();
+        View v = (View) findViewById(R.id.fab);
+        Snackbar.make(v, "Net Total: " + s, Snackbar.LENGTH_LONG).setAction("Action", null).show();
     }
 
     @Override
@@ -249,20 +332,18 @@ public class HomeScreen extends AppCompatActivity implements AddItem.netTotalCal
 
         try {
             mPrinter.endTransaction();
-        }
-        catch (final Exception e) {
+        } catch (final Exception e) {
             runOnUiThread(new Runnable() {
                 @Override
                 public synchronized void run() {
-                   // ShowMsg.showException(e, "endTransaction", mContext);
+                    // ShowMsg.showException(e, "endTransaction", mContext);
                 }
             });
         }
 
         try {
             mPrinter.disconnect();
-        }
-        catch (final Exception e) {
+        } catch (final Exception e) {
             runOnUiThread(new Runnable() {
                 @Override
                 public synchronized void run() {
@@ -286,7 +367,6 @@ public class HomeScreen extends AppCompatActivity implements AddItem.netTotalCal
             mFragments.add(fragment);
             mFragmentTitles.add(title);
         }
-
 
 
         @Override

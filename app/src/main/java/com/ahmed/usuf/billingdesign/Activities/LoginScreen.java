@@ -15,7 +15,6 @@ import com.ahmed.usuf.billingdesign.R;
 
 public class LoginScreen extends AppCompatActivity {
 
-
         //DUMMY CREDENTIALS
         private String[] credentials={"ahmed","1234"};
         private android.os.Handler handler;

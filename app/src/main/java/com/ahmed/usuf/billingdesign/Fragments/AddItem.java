@@ -2,6 +2,7 @@ package com.ahmed.usuf.billingdesign.Fragments;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -24,6 +25,10 @@ import com.ahmed.usuf.billingdesign.Adapters.LineItem;
 import com.ahmed.usuf.billingdesign.R;
 import com.ahmed.usuf.billingdesign.Adapters.RecycleViewAdapter;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,11 +36,12 @@ import java.util.List;
  * Created by Ahmed-Mariam on 4/1/2016.
  */
 public class AddItem extends Fragment {
-
+    SharedPreferences sharedpreferences;
     private static int total;
-    String[] productNames={"CHUDI","CHUDI MATERIAL","BRA","BABYS","PANT&SSHIRTS","KIDS","FORG","UNDERWEAR","PANTYS","VEST","TOPS","LEGINS"};
-    String[] qt={"1","2","3","4","5","6","7","8","9","10"};
-    EditText prc,tot;
+    String[] productNames;
+    String[] qt;
+    public EditText prc,tot,billno;
+    public static int billCount=00001;
 
 
     AppCompatSpinner pName,qty;
@@ -63,11 +69,20 @@ public class AddItem extends Fragment {
 
         View v=inflater.inflate(R.layout.bill_enter,container,false);
 
+        sharedpreferences= getActivity().getSharedPreferences("MyPref", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+
+
+
         pName=(AppCompatSpinner)v.findViewById(R.id.productname);
         qty=(AppCompatSpinner)v.findViewById(R.id.qtyspinner);
         prc=(EditText)v.findViewById(R.id.pricelabel);
         tot=(EditText)v.findViewById(R.id.totalLabel);
         tot.setEnabled(false);
+        billno=(EditText)v.findViewById(R.id.billno);
+        billno.setEnabled(false);
+
+
 
         prc.addTextChangedListener(new TextWatcher() {
             @Override
@@ -93,6 +108,7 @@ public class AddItem extends Fragment {
                     e.printStackTrace();
                 }
             }
+
         });
 
         final RecycleViewAdapter recycleViewAdapter=new RecycleViewAdapter();
@@ -114,7 +130,7 @@ public class AddItem extends Fragment {
                     prc.setError(null);
                     Toast.makeText(AddItem.this.getActivity(), "Adding to the Cart1", Toast.LENGTH_SHORT).show();
                     //  Log.d("Ahmed", "ListSize:" + RecycleViewAdapter.itemList.size());
-                    list.add(new LineItem(qty.getSelectedItem().toString(), prc.getText().toString(), pName.getSelectedItem().toString(), tot.getText().toString()));
+                    list.add(new LineItem(qty.getSelectedItem().toString(), prc.getText().toString(),billno.getText().toString(), tot.getText().toString(), pName.getSelectedItem().toString()));
                     ViewCart.mAdapter.swap(list);
                     qty.setSelection(0);
                     pName.setSelection(0);
@@ -132,11 +148,21 @@ public class AddItem extends Fragment {
             }
         });
 
-
+        try {
+            readItemData();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         ArrayAdapter<String> LTRadapter = new ArrayAdapter<String>(this.getActivity(), android.R.layout.simple_spinner_item, productNames);
         LTRadapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         pName.setAdapter(LTRadapter);
+
+        try {
+            readQuantityData();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         LTRadapter = new ArrayAdapter<String>(this.getActivity(), android.R.layout.simple_spinner_item, qt);
         LTRadapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
@@ -199,4 +225,43 @@ public class AddItem extends Fragment {
 
     }
 
+    public void readItemData() throws IOException{
+        String str="";
+        StringBuffer buf=new StringBuffer();
+        InputStream is=this.getResources().openRawResource(R.drawable.itemlname);
+        BufferedReader reader=new BufferedReader(new InputStreamReader(is));
+        if (is!=null){
+            Log.d("ahmed","InsideIF loop");
+            while ((str=reader.readLine())!=null){
+                Log.d("ahmed","InsideWHILE loop");
+                buf.append(str);
+            }
+            is.close();
+            productNames=buf.toString().split(",");
+        }
+    }
+
+    public void readQuantityData() throws IOException{
+        String str="";
+        StringBuffer buf=new StringBuffer();
+        InputStream is=this.getResources().openRawResource(R.drawable.qtylists);
+        BufferedReader reader=new BufferedReader(new InputStreamReader(is));
+        if (is!=null){
+            while ((str=reader.readLine())!=null){
+                buf.append(str);
+            }
+            is.close();
+            qt=buf.toString().split(",");
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (sharedpreferences.contains("billno")) {
+            billno.setText(""+sharedpreferences.getInt("billno", 0));
+        }else {
+            billno.setText(""+billCount);
+        }
+    }
 }
