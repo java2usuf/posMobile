@@ -25,6 +25,7 @@ import com.ahmed.usuf.billingdesign.Activities.HomeScreen;
 import com.ahmed.usuf.billingdesign.Adapters.LineItem;
 import com.ahmed.usuf.billingdesign.R;
 import com.ahmed.usuf.billingdesign.Adapters.RecycleViewAdapter;
+import com.ahmed.usuf.billingdesign.Volley.AppController;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -37,16 +38,11 @@ import java.util.List;
  * Created by Ahmed-Mariam on 4/1/2016.
  */
 public class AddItem extends Fragment implements HomeScreen.clearList{
-    SharedPreferences sharedpreferences;
     private static int total;
     String[] productNames;
     String[] qt;
     public EditText prc,tot,billno;
-    public static int billCount=00001;
     HomeScreen.clearList callBack;
-
-
-
     AppCompatSpinner pName,qty;
     ViewCart productAdapter;
     public List<LineItem> list;
@@ -64,12 +60,7 @@ public class AddItem extends Fragment implements HomeScreen.clearList{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View v=inflater.inflate(R.layout.bill_enter,container,false);
-
-        sharedpreferences= getActivity().getSharedPreferences("MyPref", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedpreferences.edit();
-
-
+        View v=inflater.inflate(R.layout.bill_enter, container, false);
 
         pName=(AppCompatSpinner)v.findViewById(R.id.productname);
         qty=(AppCompatSpinner)v.findViewById(R.id.qtyspinner);
@@ -78,8 +69,6 @@ public class AddItem extends Fragment implements HomeScreen.clearList{
         tot.setEnabled(false);
         billno=(EditText)v.findViewById(R.id.billno);
         billno.setEnabled(false);
-
-
 
         prc.addTextChangedListener(new TextWatcher() {
             @Override
@@ -126,7 +115,6 @@ public class AddItem extends Fragment implements HomeScreen.clearList{
                 }else{
                     prc.setError(null);
                     Toast.makeText(AddItem.this.getActivity(), "Adding to the Cart1", Toast.LENGTH_SHORT).show();
-                    //  Log.d("Ahmed", "ListSize:" + RecycleViewAdapter.itemList.size());
                     list.add(new LineItem(qty.getSelectedItem().toString(), prc.getText().toString(),billno.getText().toString(), tot.getText().toString(), pName.getSelectedItem().toString()));
                     ViewCart.mAdapter.swap(list);
                     qty.setSelection(0);
@@ -256,10 +244,8 @@ public class AddItem extends Fragment implements HomeScreen.clearList{
     @Override
     public void onResume() {
         super.onResume();
-        if (sharedpreferences.contains("billno")) {
-            billno.setText(""+sharedpreferences.getInt("billno", 0));
-        }else {
-            billno.setText(""+billCount);
+        if (AppController.getInstance().getSharedpreferences().contains("billno")) {
+            billno.setText("" + AppController.getInstance().getSharedpreferences().getInt("billno", 0));
         }
     }
 

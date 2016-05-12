@@ -16,7 +16,7 @@ import com.ahmed.usuf.billingdesign.R;
 public class LoginScreen extends AppCompatActivity {
 
         //DUMMY CREDENTIALS
-        private String[] credentials={"ahmed","1234"};
+        private String[] credentials={"admin","1234"};
         private android.os.Handler handler;
         private EditText user_ed,pass_ed;
         private TextView safire;
@@ -26,10 +26,6 @@ public class LoginScreen extends AppCompatActivity {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_login);
             disableKeyboard();
-
-
-
-
             user_ed=(EditText)findViewById(R.id.username);
             pass_ed=(EditText)findViewById(R.id.password);
             user_ed.setOnClickListener(new View.OnClickListener() {

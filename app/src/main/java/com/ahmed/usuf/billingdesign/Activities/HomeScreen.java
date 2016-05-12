@@ -34,6 +34,7 @@ import com.ahmed.usuf.billingdesign.Fragments.AddItem;
 import com.ahmed.usuf.billingdesign.Fragments.ViewCart;
 import com.ahmed.usuf.billingdesign.Adapters.LineItem;
 import com.ahmed.usuf.billingdesign.R;
+import com.ahmed.usuf.billingdesign.Volley.AppController;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.epson.epos2.Epos2Exception;
 import com.epson.epos2.printer.Printer;
@@ -52,10 +53,9 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
     Printer mPrinter;
     public static int width;
     public static int height;
-    SharedPreferences sharedpreferences;
     public static int discountTotal, reducedAmount;
     public static boolean isDiscountSet = false;
-    SharedPreferences.Editor editor;
+    public static boolean isBillChanged = false;
     public clearList clearCallBack;
 
     public interface clearList{
@@ -76,8 +76,7 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
         prc = (EditText) findViewById(R.id.pricelabel);
         tot = (EditText) findViewById(R.id.totalLabel);
 
-        sharedpreferences = getSharedPreferences("MyPref", Context.MODE_PRIVATE);
-        editor = sharedpreferences.edit();
+
 
         final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -129,6 +128,7 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
                         frame.setVisibility(View.GONE);
                         frameserver.setVisibility(View.GONE);
                         frameClear.setVisibility(View.GONE);
+
                         focus = getCurrentFocus();
                         if (focus != null) {
                             hiddenKeyboard(focus);
@@ -295,9 +295,10 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
                         } catch (Epos2Exception e) {
                             e.printStackTrace();
                         }
-                        AddItem.billCount++;
-                        editor.putInt("billno", AddItem.billCount);
-                        editor.commit();
+                        AppController.getInstance().getEditor().
+                                putInt("billno", ((int) AppController.getInstance().getSharedpreferences().getInt("billno", 0) +1));
+                        AppController.getInstance().getEditor().commit();
+                        isBillChanged=true;
                         clearList();
 
                     }
