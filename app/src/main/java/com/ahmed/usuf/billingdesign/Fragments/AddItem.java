@@ -21,6 +21,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 
+import com.ahmed.usuf.billingdesign.Activities.HomeScreen;
 import com.ahmed.usuf.billingdesign.Adapters.LineItem;
 import com.ahmed.usuf.billingdesign.R;
 import com.ahmed.usuf.billingdesign.Adapters.RecycleViewAdapter;
@@ -35,7 +36,7 @@ import java.util.List;
 /**
  * Created by Ahmed-Mariam on 4/1/2016.
  */
-public class AddItem extends Fragment {
+public class AddItem extends Fragment{
     SharedPreferences sharedpreferences;
     private static int total;
     String[] productNames;
@@ -48,20 +49,8 @@ public class AddItem extends Fragment {
     ViewCart productAdapter;
     public List<LineItem> list;
     public static List<LineItem> printerList;
-    netTotalCallBack callBack;
-
+    Context context;
     String selectedItem,slectedQty;
-
-    public interface netTotalCallBack{
-        public void displaySnackView(String total);
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        callBack=(netTotalCallBack)activity;
-
-    }
 
     @Nullable
     @Override

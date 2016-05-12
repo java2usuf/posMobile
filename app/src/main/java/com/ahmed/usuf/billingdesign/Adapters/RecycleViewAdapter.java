@@ -21,6 +21,7 @@ import java.util.List;
  */
 public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.MyViewHolder> {
     public static List<LineItem> itemList;
+    public static int subtotal,lessAmount,finalAmount;
     AddItem bill;
     int rowLength;
 
@@ -111,6 +112,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
                 holder.totalView.setGravity(Gravity.CENTER_HORIZONTAL);
                 holder.totalView.setTextColor(Color.RED);
                 holder.totalView.setText("$ " + HomeScreen.discountTotal);
+               // finalAmount=HomeScreen.discountTotal;
             }
         }else{
             if (position + 1 < rowLength && position > 0) {
@@ -132,6 +134,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
                 holder.totalView.setGravity(Gravity.CENTER_HORIZONTAL);
                 holder.totalView.setTextColor(Color.RED);
                 holder.totalView.setText("$ " + AddItem.getTotal());
+               // finalAmount=AddItem.getTotal();
             }
 
         }

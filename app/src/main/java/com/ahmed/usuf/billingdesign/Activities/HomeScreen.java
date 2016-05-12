@@ -34,6 +34,7 @@ import com.ahmed.usuf.billingdesign.Fragments.AddItem;
 import com.ahmed.usuf.billingdesign.Fragments.ViewCart;
 import com.ahmed.usuf.billingdesign.Adapters.LineItem;
 import com.ahmed.usuf.billingdesign.R;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.epson.epos2.Epos2Exception;
 import com.epson.epos2.printer.Printer;
 import com.epson.epos2.printer.PrinterStatusInfo;
@@ -43,7 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class HomeScreen extends AppCompatActivity implements AddItem.netTotalCallBack, ReceiveListener {
+public class HomeScreen extends AppCompatActivity implements ReceiveListener {
 
     EditText prc, tot;
     AddItem billEnterFragment;
@@ -54,6 +55,13 @@ public class HomeScreen extends AppCompatActivity implements AddItem.netTotalCal
     SharedPreferences sharedpreferences;
     public static int discountTotal, reducedAmount;
     public static boolean isDiscountSet = false;
+    SharedPreferences.Editor editor;
+    public clearList clearCallBack;
+
+    public interface clearList{
+        public void clearListValues();
+    }
+
 
 
     @Override
@@ -64,56 +72,34 @@ public class HomeScreen extends AppCompatActivity implements AddItem.netTotalCal
         if (viewPager != null) {
             setupViewPager(viewPager);
         }
-
+        billEnterFragment=new AddItem();
         prc = (EditText) findViewById(R.id.pricelabel);
         tot = (EditText) findViewById(R.id.totalLabel);
 
         sharedpreferences = getSharedPreferences("MyPref", Context.MODE_PRIVATE);
-        final SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor = sharedpreferences.edit();
 
         final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Intent intent = null;
-                try {
-                    mPrinter = new Printer(Printer.TM_T82,
-                            Printer.MODEL_CHINESE,
-                            HomeScreen.this);
-
-                    mPrinter.setReceiveEventListener(HomeScreen.this);
-
-                    StringBuilder textData = new StringBuilder();
-                    for (LineItem details : AddItem.printerList) {
-                        textData.append(details.getProductName() + "\t" + details.getPrice() + "\t" + details.getQty() + "\t" + details.getTotal() + "\n");
-                    }
-                    Log.d("Ahmed---", "Data:" + textData);
-                    mPrinter.addText(textData.toString());
-                    mPrinter.addCut(Printer.CUT_FEED);
-
-                    mPrinter.connect("TCP:192.168.2.2", Printer.PARAM_DEFAULT);
-
-                    mPrinter.beginTransaction();
-
-                    mPrinter.sendData(Printer.PARAM_DEFAULT);
-
-                    mPrinter.disconnect();
-                } catch (Epos2Exception e) {
-                    e.printStackTrace();
-                }
-                AddItem.billCount++;
-                editor.putInt("billno", AddItem.billCount);
-                editor.commit();
-                /*AddItem item = new AddItem();
-
-                if (sharedpreferences.contains("billno"))
-                    item.billno.setText(sharedpreferences.getInt("billno", 0));*/
-                List<LineItem> list = new ArrayList<LineItem>();
-                ViewCart.mAdapter.swap(list);
+                confirmPrint();
             }
         });
-
+        FloatingActionButton clearfab = (FloatingActionButton) findViewById(R.id.clearbutton);
+        clearfab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clearList();
+            }
+        });
+        FloatingActionButton server = (FloatingActionButton) findViewById(R.id.server);
+        server.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //ServerCodegoesHere
+            }
+        });
         FloatingActionButton fab2 = (FloatingActionButton) findViewById(R.id.discount);
         fab2.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -123,7 +109,11 @@ public class HomeScreen extends AppCompatActivity implements AddItem.netTotalCal
         });
         fab.setVisibility(View.GONE);
         final FrameLayout frame = (FrameLayout) findViewById(R.id.frame);
+        final FrameLayout frameserver = (FrameLayout) findViewById(R.id.frameserver);
+        final FrameLayout frameClear = (FrameLayout) findViewById(R.id.frameclear);
         frame.setVisibility(View.GONE);
+        frameserver.setVisibility(View.GONE);
+        frameClear.setVisibility(View.GONE);
         final TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -136,6 +126,8 @@ public class HomeScreen extends AppCompatActivity implements AddItem.netTotalCal
                         tabLayout.setVisibility(View.VISIBLE);
                         fab.setVisibility(View.GONE);
                         frame.setVisibility(View.GONE);
+                        frameserver.setVisibility(View.GONE);
+                        frameClear.setVisibility(View.GONE);
                         focus = getCurrentFocus();
                         if (focus != null) {
                             hiddenKeyboard(focus);
@@ -145,6 +137,8 @@ public class HomeScreen extends AppCompatActivity implements AddItem.netTotalCal
                         tabLayout.setVisibility(View.GONE);
                         fab.setVisibility(View.VISIBLE);
                         frame.setVisibility(View.VISIBLE);
+                        frameClear.setVisibility(View.VISIBLE);
+                        frameserver.setVisibility(View.VISIBLE);
                         focus = getCurrentFocus();
                         if (focus != null) {
                             hiddenKeyboard(focus);
@@ -166,6 +160,12 @@ public class HomeScreen extends AppCompatActivity implements AddItem.netTotalCal
         display.getSize(size);
         width = size.x;
         height = size.y;
+    }
+
+    private void clearList(){
+        List<LineItem> list = new ArrayList<LineItem>();
+        ViewCart.mAdapter.swap(list);
+        billEnterFragment.list=list;
     }
 
     private void discountDialog() {
@@ -251,6 +251,70 @@ public class HomeScreen extends AppCompatActivity implements AddItem.netTotalCal
         ad.show();
     }
 
+    private void confirmPrint(){
+        Context context = this;
+        String title = "MenCity";
+        String message = "Really want to Print";
+        String button1String = "Yes";
+        String button2String = "No";
+
+        AlertDialog.Builder ad = new AlertDialog.Builder(context);
+        ad.setTitle(title);
+        ad.setMessage(message);
+        ad.setPositiveButton(
+                button1String,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int arg1) {
+
+                        Intent intent = null;
+                        try {
+                            mPrinter = new Printer(Printer.TM_T82,
+                                    Printer.MODEL_CHINESE,
+                                    HomeScreen.this);
+
+                            mPrinter.setReceiveEventListener(HomeScreen.this);
+
+                            StringBuilder textData = new StringBuilder();
+                            for (LineItem details : AddItem.printerList) {
+                                textData.append(details.getProductName() + "\t" + details.getPrice() + "\t" + details.getQty() + "\t" + details.getTotal() + "\n");
+                            }
+                            Log.d("Ahmed---", "Data:" + textData);
+                            mPrinter.addText(textData.toString());
+                            mPrinter.addCut(Printer.CUT_FEED);
+
+                            mPrinter.connect("TCP:192.168.2.2", Printer.PARAM_DEFAULT);
+
+                            mPrinter.beginTransaction();
+
+                            mPrinter.sendData(Printer.PARAM_DEFAULT);
+
+                            mPrinter.disconnect();
+                        } catch (Epos2Exception e) {
+                            e.printStackTrace();
+                        }
+                        AddItem.billCount++;
+                        editor.putInt("billno", AddItem.billCount);
+                        editor.commit();
+                        clearList();
+
+                    }
+                }
+        );
+
+        ad.setNegativeButton(
+                button2String,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int arg1) {
+                        // do nothing
+
+                    }
+                }
+        );
+
+        //
+        ad.show();
+    }
+
     private void hiddenKeyboard(View v) {
         InputMethodManager keyboard = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         keyboard.hideSoftInputFromWindow(v.getWindowToken(), 0);
@@ -283,12 +347,6 @@ public class HomeScreen extends AppCompatActivity implements AddItem.netTotalCal
         adapter.addFragment(new AddItem(), "Bill It!!");
         adapter.addFragment(new ViewCart(), "Bill Details");
         viewPager.setAdapter(adapter);
-    }
-
-    @Override
-    public void displaySnackView(String s) {
-        View v = (View) findViewById(R.id.fab);
-        Snackbar.make(v, "Net Total: " + s, Snackbar.LENGTH_LONG).setAction("Action", null).show();
     }
 
     @Override

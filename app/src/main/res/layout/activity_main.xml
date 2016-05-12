@@ -32,12 +32,17 @@
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <FrameLayout
-        android:layout_width="wrap_content" android:id="@+id/frame"
+        android:layout_width="wrap_content" android:id="@+id/frameclear"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|start">
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="?attr/actionBarSize"
+        >
 
         <android.support.design.widget.FloatingActionButton
-            android:id="@+id/discount"
+            android:id="@+id/clearbutton"
+            android:backgroundTint="@android:color/holo_purple"
+            app:fabSize="mini"
+            android:layout_margin="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             />
@@ -46,7 +51,33 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="%"
+            android:text="CL"
+            android:elevation="16dp"
+            android:textColor="@android:color/white"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="wrap_content" android:id="@+id/frameserver"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|start"
+        android:layout_marginBottom="?attr/actionBarSize"
+        >
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/server"
+            android:backgroundTint="@android:color/holo_purple"
+            app:fabSize="normal"
+            android:layout_margin="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Server"
             android:elevation="16dp"
             android:textColor="@android:color/white"
             android:textAppearance="?android:attr/textAppearanceMedium" />
