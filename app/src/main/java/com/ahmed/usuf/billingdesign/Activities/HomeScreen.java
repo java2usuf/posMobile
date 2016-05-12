@@ -98,6 +98,7 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
             @Override
             public void onClick(View v) {
                 //ServerCodegoesHere
+
             }
         });
         FloatingActionButton fab2 = (FloatingActionButton) findViewById(R.id.discount);
@@ -189,15 +190,16 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
                         int total = billEnterFragment.getTotal();
                         int percent = Integer.parseInt(percentage.getText().toString());
                         Toast.makeText(HomeScreen.this, percent + "=percent", Toast.LENGTH_LONG).show();
-                        int p = percent / 100;
+                        double p = percent / 100;
                         Toast.makeText(HomeScreen.this, p + "", Toast.LENGTH_LONG).show();
-                        int result = total * p;
-                        reducedAmount = result;
-                        total -= result;
+                        double result = total * p;
+                        reducedAmount =(int) result;
+                        total -= reducedAmount;
                         discountTotal = total;
                         isDiscountSet = true;
                         price.setEnabled(false);
                         ViewCart.mAdapter.swap(AddItem.printerList);
+                        isDiscountSet=false;
                         dialog.dismiss();
                     }
 
@@ -209,6 +211,7 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
                         isDiscountSet = true;
                         percentage.setEnabled(false);
                         ViewCart.mAdapter.swap(AddItem.printerList);
+                        isDiscountSet=false;
                         dialog.dismiss();
                     }
                 }

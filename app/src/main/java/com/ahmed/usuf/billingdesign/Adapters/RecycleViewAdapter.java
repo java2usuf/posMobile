@@ -82,7 +82,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         if (position == 0) {
             Log.d("ahmed", "if pos:" + position);
 
-            holder.itemName.setText("Product Name");
+            holder.itemName.setText("Item Name");
             holder.itemName.setTypeface(null, Typeface.BOLD);
             holder.priceView.setTypeface(null, Typeface.BOLD);
             holder.qtyView.setTypeface(null, Typeface.BOLD);

@@ -36,13 +36,15 @@ import java.util.List;
 /**
  * Created by Ahmed-Mariam on 4/1/2016.
  */
-public class AddItem extends Fragment{
+public class AddItem extends Fragment implements HomeScreen.clearList{
     SharedPreferences sharedpreferences;
     private static int total;
     String[] productNames;
     String[] qt;
     public EditText prc,tot,billno;
     public static int billCount=00001;
+    HomeScreen.clearList callBack;
+
 
 
     AppCompatSpinner pName,qty;
@@ -51,6 +53,12 @@ public class AddItem extends Fragment{
     public static List<LineItem> printerList;
     Context context;
     String selectedItem,slectedQty;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        callBack=(HomeScreen.clearList)this;
+    }
 
     @Nullable
     @Override
@@ -166,8 +174,9 @@ public class AddItem extends Fragment{
                 if (prc.getText().toString().isEmpty()) {
 
                 } else {
-                    prc.setText("");
-                    tot.setText("");
+                    int price=Integer.parseInt(prc.getText().toString());
+                    price*=Integer.parseInt(qty.getSelectedItem().toString());
+                    tot.setText(""+price);
                 }
             }
 
@@ -252,5 +261,11 @@ public class AddItem extends Fragment{
         }else {
             billno.setText(""+billCount);
         }
+    }
+
+    @Override
+    public void clearListValues() {
+        Toast.makeText(getActivity(),"Working",Toast.LENGTH_LONG).show();
+
     }
 }
