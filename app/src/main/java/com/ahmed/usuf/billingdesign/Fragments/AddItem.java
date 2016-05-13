@@ -237,6 +237,9 @@ public class AddItem extends Fragment implements fragmentLifeCycle{
     @Override
     public void onResumeFragment() {
         Log.d("AddItem", "OnResume");
+
+        AppController.getInstance().setIsDiscountOn(false);
+
         if (AppController.getInstance().getSharedpreferences().contains("billno")) {
             billno.setText("" + AppController.getInstance().getSharedpreferences().getInt("billno", 0));
         }

@@ -14,6 +14,7 @@ import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
@@ -37,8 +38,14 @@ import com.epson.epos2.printer.Printer;
 import com.epson.epos2.printer.PrinterStatusInfo;
 import com.epson.epos2.printer.ReceiveListener;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Properties;
 
 
 public class HomeScreen extends AppCompatActivity implements ReceiveListener {
@@ -62,6 +69,11 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Toolbar toolbar=(Toolbar)findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+
+
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         if (viewPager != null) {
             setupViewPager(viewPager);
@@ -84,6 +96,7 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
             @Override
             public void onClick(View v) {
                 clearList();
+                AppController.getInstance().setIsDiscountOn(false);
             }
         });
 
@@ -92,6 +105,15 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
             @Override
             public void onClick(View v) {
                 //ServerCodegoesHere
+                try {
+                    //load a properties file
+
+                    //get the property value and print it out
+                    Toast.makeText(getBaseContext(),""+AppController.getProperty("printer.design.shopname",getApplicationContext()),Toast.LENGTH_LONG).show();
+
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
 
             }
         });
@@ -213,16 +235,17 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
                         int total = AppController.getInstance().getTotal();
                         int percent = Integer.parseInt(percentage.getText().toString());
                         Toast.makeText(HomeScreen.this, percent + "=percent", Toast.LENGTH_LONG).show();
-                        double p = percent / 100;
+                        double p = ((double)percent / 100);
                         Toast.makeText(HomeScreen.this, p + "", Toast.LENGTH_LONG).show();
-                        double result = total * p;
+                        double result = (double) total * p;
+                        Toast.makeText(HomeScreen.this, result + ":::", Toast.LENGTH_LONG).show();
                         reducedAmount = (int) result;
                         total -= reducedAmount;
                         discountTotal = total;
-                        isDiscountSet = true;
+                        AppController.getInstance().setIsDiscountOn(true);
                         price.setEnabled(false);
-                        ViewCart.mAdapter.swap(AddItem.printerList);
-                        isDiscountSet = false;
+                        ViewCart.mAdapter.swap(AppController.getInstance().getBag());
+//                        AppController.getInstance().setIsDiscountOn(false);
                         dialog.dismiss();
                     }
 
@@ -231,10 +254,10 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
                         reducedAmount = Integer.parseInt(price.getText().toString());
                         total -= reducedAmount;
                         discountTotal = total;
-                        isDiscountSet = true;
+                        AppController.getInstance().setIsDiscountOn(true);
                         percentage.setEnabled(false);
-                        ViewCart.mAdapter.swap(AddItem.printerList);
-                        isDiscountSet = false;
+                        ViewCart.mAdapter.swap(AppController.getInstance().getBag());
+//                        AppController.getInstance().setIsDiscountOn(false);
                         dialog.dismiss();
                     }
                 }
@@ -291,22 +314,56 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
                 button1String,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
-
+                        AppController.getInstance().setIsDiscountOn(false);
                         Intent intent = null;
                         try {
                             mPrinter = new Printer(Printer.TM_T82,
                                     Printer.MODEL_CHINESE,
                                     HomeScreen.this);
 
+
                             mPrinter.setReceiveEventListener(HomeScreen.this);
 
-                            StringBuilder textData = new StringBuilder();
-                            for (LineItem details : AppController.getInstance().getBag()) {
-                                textData.append(details.getProductName() + "\t" + details.getPrice() + "\t" + details.getQty() + "\t" + details.getTotal() + "\n");
-                            }
-                            Log.d("Ahmed---", "Data:" + textData);
-                            mPrinter.addText(textData.toString());
+                            mPrinter.addTextAlign(Printer.ALIGN_CENTER);
+
+                            String printerkey="printer.design.";
+
+                            mPrinter.addText(AppController.getProperty(printerkey + "shopname", getApplicationContext()));
                             mPrinter.addCut(Printer.CUT_FEED);
+                            mPrinter.addText(AppController.getProperty(printerkey + "location", getApplicationContext()));
+                            mPrinter.addCut(Printer.CUT_FEED);
+                            mPrinter.addText(AppController.getProperty(printerkey + "tin", getApplicationContext()));
+                            mPrinter.addCut(Printer.CUT_FEED);
+                            mPrinter.addText(AppController.getProperty(printerkey + "tin", getApplicationContext()));
+                            mPrinter.addCut(Printer.CUT_FEED);
+
+                            mPrinter.addTextAlign(Printer.ALIGN_LEFT);
+                            DateFormat df = new SimpleDateFormat("dd-MM-yy hh:mm a");
+                            mPrinter.addText(" Date: " + df.format(new Date()));
+                            mPrinter.addCut(Printer.CUT_FEED);
+                            mPrinter.addCut(Printer.CUT_FEED);
+                            mPrinter.addTextAlign(Printer.ALIGN_CENTER);
+                            mPrinter.addText("------------------------------------");
+                            mPrinter.addTextAlign(Printer.ALIGN_LEFT);
+                            mPrinter.addText("No\tItem\t\tQty\tPrice\tTotal");
+                            int itemNo=0;
+                            for(LineItem lineItem:AppController.getInstance().getBag()){
+                                String temp=String.format("%2s", itemNo+"\t")+
+                                        String.format("%-10s", lineItem.getProductName())+"\t"+
+                                        String.format("%3s", lineItem.getQty()+"\t"+
+                                                String.format("%4s", lineItem.getPrice())+"\t"+
+                                                String.format("%8s", lineItem.getTotal()));
+                                mPrinter.addText(temp);
+                                mPrinter.addCut(Printer.CUT_FEED);
+                            }
+                            mPrinter.addTextAlign(Printer.ALIGN_CENTER);
+                            mPrinter.addText("------------------------------------");
+                            String temp=String.format("%2s", "")+"\t"+
+                                    String.format("%-10s", "")+"\t"+
+                                    String.format("%-3s", "")+"\t"+
+                                    String.format("%4s", "")+"\t"+
+                                    String.format("%8s", AppController.getInstance().getTotal());
+                            mPrinter.addText(temp);
 
                             mPrinter.connect("TCP:192.168.2.2", Printer.PARAM_DEFAULT);
 
@@ -317,12 +374,14 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
                             mPrinter.disconnect();
                         } catch (Epos2Exception e) {
                             e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
                         AppController.getInstance().getEditor().
                                 putInt("billno", ((int) AppController.getInstance().getSharedpreferences().getInt("billno", 0) + 1));
                         AppController.getInstance().getEditor().commit();
                         clearList();
-                        viewPager.setCurrentItem(0,true);
+                        viewPager.setCurrentItem(0, true);
 
                     }
                 }
