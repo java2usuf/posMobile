@@ -27,7 +27,9 @@ public class LoginScreen extends AppCompatActivity {
             setContentView(R.layout.activity_login);
             disableKeyboard();
             user_ed=(EditText)findViewById(R.id.username);
+            user_ed.setText("admin");
             pass_ed=(EditText)findViewById(R.id.password);
+            pass_ed.setFocusable(true);
             user_ed.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

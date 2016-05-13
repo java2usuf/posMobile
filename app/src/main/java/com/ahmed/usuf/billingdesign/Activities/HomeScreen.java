@@ -4,10 +4,8 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -16,8 +14,6 @@ import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
@@ -27,15 +23,15 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.TextView;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.ahmed.usuf.billingdesign.Fragments.AddItem;
 import com.ahmed.usuf.billingdesign.Fragments.ViewCart;
 import com.ahmed.usuf.billingdesign.Adapters.LineItem;
+import com.ahmed.usuf.billingdesign.Interfaces.fragmentLifeCycle;
 import com.ahmed.usuf.billingdesign.R;
 import com.ahmed.usuf.billingdesign.Volley.AppController;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.epson.epos2.Epos2Exception;
 import com.epson.epos2.printer.Printer;
 import com.epson.epos2.printer.PrinterStatusInfo;
@@ -57,11 +53,12 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
     public static boolean isDiscountSet = false;
     public static boolean isBillChanged = false;
     public clearList clearCallBack;
+    private Adapter adapter;
 
-    public interface clearList{
+
+    public interface clearList {
         public void clearListValues();
     }
-
 
 
     @Override
@@ -72,10 +69,9 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
         if (viewPager != null) {
             setupViewPager(viewPager);
         }
-        billEnterFragment=new AddItem();
+        billEnterFragment = new AddItem();
         prc = (EditText) findViewById(R.id.pricelabel);
         tot = (EditText) findViewById(R.id.totalLabel);
-
 
 
         final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -114,6 +110,34 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
         frame.setVisibility(View.GONE);
         frameserver.setVisibility(View.GONE);
         frameClear.setVisibility(View.GONE);
+
+        if (viewPager != null) {
+            viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                @Override
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+                }
+
+                int currentPosition = 0;
+
+                @Override
+                public void onPageSelected(int newPosition) {
+
+                    fragmentLifeCycle fragmentToShow = (fragmentLifeCycle)adapter.getItem(newPosition);
+                    fragmentToShow.onResumeFragment();
+
+                    fragmentLifeCycle fragmentToHide = (fragmentLifeCycle)adapter.getItem(currentPosition);
+                    fragmentToHide.onPauseFragment();
+
+                    currentPosition = newPosition;
+                }
+
+                @Override
+                public void onPageScrollStateChanged(int state) {
+
+                }
+            });
+        }
         final TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -128,7 +152,6 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
                         frame.setVisibility(View.GONE);
                         frameserver.setVisibility(View.GONE);
                         frameClear.setVisibility(View.GONE);
-
                         focus = getCurrentFocus();
                         if (focus != null) {
                             hiddenKeyboard(focus);
@@ -163,10 +186,9 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
         height = size.y;
     }
 
-    private void clearList(){
-        List<LineItem> list = new ArrayList<LineItem>();
-        ViewCart.mAdapter.swap(list);
-        billEnterFragment.list=list;
+    private void clearList() {
+        AppController.getInstance().getBag().clear();
+        ViewCart.mAdapter.swap(AppController.getInstance().getBag());
     }
 
     private void discountDialog() {
@@ -187,31 +209,31 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
                     Toast.makeText(HomeScreen.this, "Fill any one Fiels", Toast.LENGTH_LONG).show();
                 } else {
                     if (price.getText().toString().isEmpty()) {
-                        int total = billEnterFragment.getTotal();
+                        int total = AppController.getInstance().getTotal();
                         int percent = Integer.parseInt(percentage.getText().toString());
                         Toast.makeText(HomeScreen.this, percent + "=percent", Toast.LENGTH_LONG).show();
                         double p = percent / 100;
                         Toast.makeText(HomeScreen.this, p + "", Toast.LENGTH_LONG).show();
                         double result = total * p;
-                        reducedAmount =(int) result;
+                        reducedAmount = (int) result;
                         total -= reducedAmount;
                         discountTotal = total;
                         isDiscountSet = true;
                         price.setEnabled(false);
                         ViewCart.mAdapter.swap(AddItem.printerList);
-                        isDiscountSet=false;
+                        isDiscountSet = false;
                         dialog.dismiss();
                     }
 
                     if (percentage.getText().toString().isEmpty()) {
-                        int total = billEnterFragment.getTotal();
+                        int total = AppController.getInstance().getTotal();
                         reducedAmount = Integer.parseInt(price.getText().toString());
                         total -= reducedAmount;
                         discountTotal = total;
                         isDiscountSet = true;
                         percentage.setEnabled(false);
                         ViewCart.mAdapter.swap(AddItem.printerList);
-                        isDiscountSet=false;
+                        isDiscountSet = false;
                         dialog.dismiss();
                     }
                 }
@@ -254,7 +276,7 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
         ad.show();
     }
 
-    private void confirmPrint(){
+    private void confirmPrint() {
         Context context = this;
         String title = "MenCity";
         String message = "Really want to Print";
@@ -296,9 +318,9 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
                             e.printStackTrace();
                         }
                         AppController.getInstance().getEditor().
-                                putInt("billno", ((int) AppController.getInstance().getSharedpreferences().getInt("billno", 0) +1));
+                                putInt("billno", ((int) AppController.getInstance().getSharedpreferences().getInt("billno", 0) + 1));
                         AppController.getInstance().getEditor().commit();
-                        isBillChanged=true;
+                        isBillChanged = true;
                         clearList();
 
                     }
@@ -347,7 +369,7 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        Adapter adapter = new Adapter(getSupportFragmentManager());
+        adapter = new Adapter(getSupportFragmentManager(),this);
         adapter.addFragment(new AddItem(), "Bill It!!");
         adapter.addFragment(new ViewCart(), "Bill Details");
         viewPager.setAdapter(adapter);
@@ -420,10 +442,13 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
     static class Adapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragments = new ArrayList<>();
         private final List<String> mFragmentTitles = new ArrayList<>();
+        private static Context context;
 
-        public Adapter(FragmentManager fm) {
+        public Adapter(FragmentManager fm,Context c) {
             super(fm);
+            context=c;
         }
+
 
         public void addFragment(Fragment fragment, String title) {
             mFragments.add(fragment);
@@ -433,7 +458,21 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
 
         @Override
         public Fragment getItem(int position) {
-            return mFragments.get(position);
+            switch (position) {
+                case 0:
+                    Bundle b = new Bundle();
+                    b.putInt("billno", AppController.getInstance().getSharedpreferences().getInt("billno", 0));
+                    AddItem addItem = new AddItem();
+                    addItem.setArguments(b);
+                    Toast.makeText(context,"insideCase 0",Toast.LENGTH_LONG).show();
+                    return addItem;
+
+
+                case 1:
+                    return new ViewCart();
+
+            }
+            return new AddItem();
         }
 
         @Override

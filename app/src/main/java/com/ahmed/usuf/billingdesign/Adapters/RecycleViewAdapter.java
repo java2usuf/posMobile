@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.ahmed.usuf.billingdesign.Activities.HomeScreen;
 import com.ahmed.usuf.billingdesign.Fragments.AddItem;
 import com.ahmed.usuf.billingdesign.R;
+import com.ahmed.usuf.billingdesign.Volley.AppController;
 
 import java.util.List;
 
@@ -133,7 +134,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
                 holder.totalView.setWidth(HomeScreen.width);
                 holder.totalView.setGravity(Gravity.CENTER_HORIZONTAL);
                 holder.totalView.setTextColor(Color.RED);
-                holder.totalView.setText("$ " + AddItem.getTotal());
+                holder.totalView.setText("u20B9\n " + AppController.getInstance().getTotal());
                // finalAmount=AddItem.getTotal();
             }
 
@@ -147,7 +148,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
             holder.totalView.setWidth(HomeScreen.width);
             holder.totalView.setGravity(Gravity.CENTER_HORIZONTAL);
             holder.totalView.setTextColor(Color.BLACK);
-            holder.totalView.setText("SubTotal: " + AddItem.getTotal());
+            holder.totalView.setText("SubTotal: " + AppController.getInstance().getTotal());
         }
 
         if (position + 1 == rowLength - 1&&HomeScreen.isDiscountSet) {

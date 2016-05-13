@@ -5,11 +5,14 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.ahmed.usuf.billingdesign.Adapters.LineItem;
+import com.ahmed.usuf.billingdesign.Interfaces.fragmentLifeCycle;
 import com.ahmed.usuf.billingdesign.R;
 import com.ahmed.usuf.billingdesign.Adapters.RecycleViewAdapter;
 import com.epson.epos2.printer.Printer;
@@ -19,7 +22,7 @@ import com.epson.epos2.printer.ReceiveListener;
 /**
  * Created by Ahmed-Mariam on 3/30/2016.
  */
-public class ViewCart extends android.support.v4.app.Fragment implements ReceiveListener{
+public class ViewCart extends android.support.v4.app.Fragment implements ReceiveListener,fragmentLifeCycle{
 
 
     public RecyclerView recyclerView;
@@ -80,4 +83,13 @@ public class ViewCart extends android.support.v4.app.Fragment implements Receive
     }
 
 
+    @Override
+    public void onPauseFragment() {
+        Log.d("onPause", "onPause");
+    }
+
+    @Override
+    public void onResumeFragment() {
+        Log.d("OnResume","OnResume");
+    }
 }

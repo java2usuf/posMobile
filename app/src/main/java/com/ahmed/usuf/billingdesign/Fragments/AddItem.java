@@ -1,9 +1,9 @@
 package com.ahmed.usuf.billingdesign.Fragments;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.ahmed.usuf.billingdesign.Activities.HomeScreen;
 import com.ahmed.usuf.billingdesign.Adapters.LineItem;
+import com.ahmed.usuf.billingdesign.Interfaces.fragmentLifeCycle;
 import com.ahmed.usuf.billingdesign.R;
 import com.ahmed.usuf.billingdesign.Adapters.RecycleViewAdapter;
 import com.ahmed.usuf.billingdesign.Volley.AppController;
@@ -37,23 +38,18 @@ import java.util.List;
 /**
  * Created by Ahmed-Mariam on 4/1/2016.
  */
-public class AddItem extends Fragment implements HomeScreen.clearList{
-    private static int total;
+public class AddItem extends Fragment implements fragmentLifeCycle{
     String[] productNames;
     String[] qt;
     public EditText prc,tot,billno;
     HomeScreen.clearList callBack;
     AppCompatSpinner pName,qty;
-    ViewCart productAdapter;
-    public List<LineItem> list;
-    public static List<LineItem> printerList;
-    Context context;
-    String selectedItem,slectedQty;
 
+    public static List<LineItem> printerList;
+    int billNumber;
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        callBack=(HomeScreen.clearList)this;
     }
 
     @Nullable
@@ -69,6 +65,7 @@ public class AddItem extends Fragment implements HomeScreen.clearList{
         tot.setEnabled(false);
         billno=(EditText)v.findViewById(R.id.billno);
         billno.setEnabled(false);
+
 
         prc.addTextChangedListener(new TextWatcher() {
             @Override
@@ -100,7 +97,6 @@ public class AddItem extends Fragment implements HomeScreen.clearList{
         final RecycleViewAdapter recycleViewAdapter=new RecycleViewAdapter();
 
         FloatingActionButton fab=(FloatingActionButton)v.findViewById(R.id.fab);
-        list=new ArrayList<LineItem>();
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -115,19 +111,13 @@ public class AddItem extends Fragment implements HomeScreen.clearList{
                 }else{
                     prc.setError(null);
                     Toast.makeText(AddItem.this.getActivity(), "Adding to the Cart1", Toast.LENGTH_SHORT).show();
-                    list.add(new LineItem(qty.getSelectedItem().toString(), prc.getText().toString(),billno.getText().toString(), tot.getText().toString(), pName.getSelectedItem().toString()));
-                    ViewCart.mAdapter.swap(list);
+                    AppController.getInstance().getBag().add(new LineItem(qty.getSelectedItem().toString(), prc.getText().toString(), billno.getText().toString(), tot.getText().toString(), pName.getSelectedItem().toString()));
+                    ViewCart.mAdapter.swap(AppController.getInstance().getBag());
                     qty.setSelection(0);
                     pName.setSelection(0);
                     prc.setText("");
                     tot.setText("");
 
-                    int totalCount =  0;
-                    for (LineItem details:list){
-                        totalCount+=Integer.parseInt(details.getTotal());
-                    }
-                    total=totalCount;
-                    printerList=list;
                 }
 
             }
@@ -201,10 +191,6 @@ public class AddItem extends Fragment implements HomeScreen.clearList{
         keyboard.hideSoftInputFromWindow(v.getWindowToken(), 0);
     }
 
-    public static int getTotal(){
-        return  total;
-    }
-
     @Override
     public void onPause() {
         super.onPause();
@@ -249,9 +235,14 @@ public class AddItem extends Fragment implements HomeScreen.clearList{
         }
     }
 
-    @Override
-    public void clearListValues() {
-        Toast.makeText(getActivity(),"Working",Toast.LENGTH_LONG).show();
 
+    @Override
+    public void onPauseFragment() {
+        Log.d("onPause", "onPause");
+    }
+
+    @Override
+    public void onResumeFragment() {
+        Log.d("OnResume", "OnResume");
     }
 }

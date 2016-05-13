@@ -5,10 +5,14 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 
+import com.ahmed.usuf.billingdesign.Adapters.LineItem;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Ahmed-Mariam on 5/12/2016.
@@ -17,7 +21,6 @@ public class AppController extends Application {
 
     public static final String TAG = "AppController";
     private RequestQueue mRequestQueue;
-    private ImageLoader mImageLoader;
 
     public SharedPreferences.Editor getEditor() {
         return editor;
@@ -27,10 +30,27 @@ public class AppController extends Application {
         this.editor = editor;
     }
 
-    SharedPreferences.Editor editor;
+    private SharedPreferences.Editor editor;
 
+    public List<LineItem> getBag() {
+        return bag;
+    }
+
+    public void setBag(List<LineItem> bag) {
+        this.bag = bag;
+    }
+
+    private List<LineItem> bag = new ArrayList<LineItem>();
     private SharedPreferences sharedpreferences;
     private static AppController mInstance;
+
+    public int getTotal(){
+        int totalCount =  0;
+        for (LineItem details: AppController.getInstance().getBag()){
+            totalCount+=Integer.parseInt(details.getTotal());
+        }
+        return totalCount;
+    }
 
     @Override
     public void onCreate() {
