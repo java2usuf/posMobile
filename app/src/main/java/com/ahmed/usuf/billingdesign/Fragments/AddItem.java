@@ -27,6 +27,7 @@ import com.ahmed.usuf.billingdesign.Interfaces.fragmentLifeCycle;
 import com.ahmed.usuf.billingdesign.R;
 import com.ahmed.usuf.billingdesign.Adapters.RecycleViewAdapter;
 import com.ahmed.usuf.billingdesign.Volley.AppController;
+import com.google.common.base.Strings;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -38,14 +39,15 @@ import java.util.List;
 /**
  * Created by Ahmed-Mariam on 4/1/2016.
  */
-public class AddItem extends Fragment implements fragmentLifeCycle{
+public class AddItem extends Fragment implements fragmentLifeCycle {
     String[] productNames;
     String[] qt;
-    public EditText prc,tot,billno;
-    AppCompatSpinner pName,qty;
+    public EditText prc, tot, billno;
+    AppCompatSpinner pName, qty;
 
     public static List<LineItem> printerList;
     int billNumber;
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -55,14 +57,14 @@ public class AddItem extends Fragment implements fragmentLifeCycle{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View v=inflater.inflate(R.layout.bill_enter, container, false);
+        View v = inflater.inflate(R.layout.bill_enter, container, false);
 
-        pName=(AppCompatSpinner)v.findViewById(R.id.productname);
-        qty=(AppCompatSpinner)v.findViewById(R.id.qtyspinner);
-        prc=(EditText)v.findViewById(R.id.pricelabel);
-        tot=(EditText)v.findViewById(R.id.totalLabel);
+        pName = (AppCompatSpinner) v.findViewById(R.id.productname);
+        qty = (AppCompatSpinner) v.findViewById(R.id.qtyspinner);
+        prc = (EditText) v.findViewById(R.id.pricelabel);
+        tot = (EditText) v.findViewById(R.id.totalLabel);
         tot.setEnabled(false);
-        billno=(EditText)v.findViewById(R.id.billno);
+        billno = (EditText) v.findViewById(R.id.billno);
         billno.setEnabled(false);
 
 
@@ -82,9 +84,12 @@ public class AddItem extends Fragment implements fragmentLifeCycle{
                 try {
                     String buffer;
                     buffer = qty.getSelectedItem().toString();
-                    int calculatedAmount = Integer.parseInt(buffer) * Integer.parseInt(prc.getText().toString());
-                    Log.d("Ahmed", "" + calculatedAmount);
-                    tot.setText("" + calculatedAmount);
+                    String priceValue = prc.getText().toString();
+                    if(!Strings.isNullOrEmpty(priceValue)){
+                        int calculatedAmount = Integer.parseInt(buffer) * Integer.parseInt(priceValue);
+                        Log.d("afterTextChanged : Total calculated amount ",""+ calculatedAmount);
+                        tot.setText("" + calculatedAmount);
+                    }
                 } catch (NumberFormatException e) {
                     tot.setText("");
                     e.printStackTrace();
@@ -93,21 +98,21 @@ public class AddItem extends Fragment implements fragmentLifeCycle{
 
         });
 
-        FloatingActionButton fab=(FloatingActionButton)v.findViewById(R.id.fab);
+        FloatingActionButton fab = (FloatingActionButton) v.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-               View focus = getActivity().getCurrentFocus();
+                View focus = getActivity().getCurrentFocus();
                 if (focus != null) {
                     hiddenKeyboard(focus);
                 }
 
-                if (prc.getText().toString().isEmpty()){
+                if (prc.getText().toString().isEmpty()) {
                     prc.setError("Please Enter Product price");
-                }else{
+                } else {
                     prc.setError(null);
-                    Toast.makeText(AddItem.this.getActivity(), "Adding to the Cart1", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddItem.this.getActivity(), "Adding to the Cart", Toast.LENGTH_LONG).show();
                     AppController.getInstance().getBag().add(new LineItem(qty.getSelectedItem().toString(), prc.getText().toString(), billno.getText().toString(), tot.getText().toString(), pName.getSelectedItem().toString()));
                     ViewCart.mAdapter.swap(AppController.getInstance().getBag());
                     qty.setSelection(0);
@@ -126,7 +131,7 @@ public class AddItem extends Fragment implements fragmentLifeCycle{
             e.printStackTrace();
         }
 
-        ArrayAdapter<String> LTRadapter = new ArrayAdapter<String>(this.getActivity(), android.R.layout.simple_spinner_item, productNames);
+        ArrayAdapter<String> LTRadapter = new ArrayAdapter<String>(this.getActivity(), R.layout.spinner_style, productNames);
         LTRadapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         pName.setAdapter(LTRadapter);
 
@@ -136,7 +141,7 @@ public class AddItem extends Fragment implements fragmentLifeCycle{
             e.printStackTrace();
         }
 
-        LTRadapter = new ArrayAdapter<String>(this.getActivity(), android.R.layout.simple_spinner_item, qt);
+        LTRadapter = new ArrayAdapter<String>(this.getActivity(), R.layout.spinner_style, qt);
         LTRadapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         qty.setAdapter(LTRadapter);
         qty.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -149,9 +154,9 @@ public class AddItem extends Fragment implements fragmentLifeCycle{
                 if (prc.getText().toString().isEmpty()) {
 
                 } else {
-                    int price=Integer.parseInt(prc.getText().toString());
-                    price*=Integer.parseInt(qty.getSelectedItem().toString());
-                    tot.setText(""+price);
+                    int price = Integer.parseInt(prc.getText().toString());
+                    price *= Integer.parseInt(qty.getSelectedItem().toString());
+                    tot.setText("" + price);
                 }
             }
 
@@ -178,7 +183,7 @@ public class AddItem extends Fragment implements fragmentLifeCycle{
     }
 
     private void hiddenKeyboard(View v) {
-        InputMethodManager keyboard = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager keyboard = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         keyboard.hideSoftInputFromWindow(v.getWindowToken(), 0);
     }
 
@@ -188,33 +193,31 @@ public class AddItem extends Fragment implements fragmentLifeCycle{
 
     }
 
-    public void readItemData() throws IOException{
-        String str="";
-        StringBuffer buf=new StringBuffer();
-        InputStream is=this.getResources().openRawResource(R.drawable.itemlname);
-        BufferedReader reader=new BufferedReader(new InputStreamReader(is));
-        if (is!=null){
-            Log.d("ahmed","InsideIF loop");
-            while ((str=reader.readLine())!=null){
-                Log.d("ahmed","InsideWHILE loop");
+    public void readItemData() throws IOException {
+        String str = "";
+        StringBuffer buf = new StringBuffer();
+        InputStream is = this.getResources().openRawResource(R.drawable.itemlname);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        if (is != null) {
+            while ((str = reader.readLine()) != null) {
                 buf.append(str);
             }
             is.close();
-            productNames=buf.toString().split(",");
+            productNames = buf.toString().split(",");
         }
     }
 
-    public void readQuantityData() throws IOException{
-        String str="";
-        StringBuffer buf=new StringBuffer();
-        InputStream is=this.getResources().openRawResource(R.drawable.qtylists);
-        BufferedReader reader=new BufferedReader(new InputStreamReader(is));
-        if (is!=null){
-            while ((str=reader.readLine())!=null){
+    public void readQuantityData() throws IOException {
+        String str = "";
+        StringBuffer buf = new StringBuffer();
+        InputStream is = this.getResources().openRawResource(R.drawable.qtylists);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        if (is != null) {
+            while ((str = reader.readLine()) != null) {
                 buf.append(str);
             }
             is.close();
-            qt=buf.toString().split(",");
+            qt = buf.toString().split(",");
         }
     }
 
@@ -223,7 +226,7 @@ public class AddItem extends Fragment implements fragmentLifeCycle{
         super.onResume();
         if (AppController.getInstance().getSharedpreferences().contains("billno")) {
             Toast.makeText(getActivity(), "Insidebillno Contains", Toast.LENGTH_SHORT).show();
-            billno.setText("" + AppController.getInstance().getSharedpreferences().getInt("billno", 0));
+            billno.setText(Strings.padStart("" + AppController.getInstance().getSharedpreferences().getInt("billno", 0), 5, '0'));
         }
     }
 
@@ -241,7 +244,12 @@ public class AddItem extends Fragment implements fragmentLifeCycle{
         AppController.getInstance().setIsDiscountOn(false);
 
         if (AppController.getInstance().getSharedpreferences().contains("billno")) {
-            billno.setText("" + AppController.getInstance().getSharedpreferences().getInt("billno", 0));
+            try {
+                AppController.getInstance().getSharedpreferences();
+                billno.setText(Strings.padStart("" + AppController.getInstance().getSharedpreferences().getInt("billno", 0), 5, '0'));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 }

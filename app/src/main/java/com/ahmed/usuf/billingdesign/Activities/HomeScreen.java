@@ -37,6 +37,7 @@ import com.epson.epos2.Epos2Exception;
 import com.epson.epos2.printer.Printer;
 import com.epson.epos2.printer.PrinterStatusInfo;
 import com.epson.epos2.printer.ReceiveListener;
+import com.google.common.base.Strings;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -69,11 +70,6 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar=(Toolbar)findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-
-
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         if (viewPager != null) {
             setupViewPager(viewPager);
@@ -97,6 +93,7 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
             public void onClick(View v) {
                 clearList();
                 AppController.getInstance().setIsDiscountOn(false);
+                viewPager.setCurrentItem(0);
             }
         });
 
@@ -145,13 +142,10 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
 
                 @Override
                 public void onPageSelected(int newPosition) {
-
                     fragmentLifeCycle fragmentToShow = (fragmentLifeCycle) adapter.getItem(newPosition);
                     fragmentToShow.onResumeFragment();
-
                     fragmentLifeCycle fragmentToHide = (fragmentLifeCycle) adapter.getItem(currentPosition);
                     fragmentToHide.onPauseFragment();
-
                     currentPosition = newPosition;
                 }
 
@@ -228,37 +222,40 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
         dialogButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (price.getText().toString() == null && percentage.getText().toString() == null) {
-                    Toast.makeText(HomeScreen.this, "Fill any one Fiels", Toast.LENGTH_LONG).show();
-                } else {
-                    if (price.getText().toString().isEmpty()) {
-                        int total = AppController.getInstance().getTotal();
-                        int percent = Integer.parseInt(percentage.getText().toString());
-                        Toast.makeText(HomeScreen.this, percent + "=percent", Toast.LENGTH_LONG).show();
-                        double p = ((double)percent / 100);
-                        Toast.makeText(HomeScreen.this, p + "", Toast.LENGTH_LONG).show();
-                        double result = (double) total * p;
-                        Toast.makeText(HomeScreen.this, result + ":::", Toast.LENGTH_LONG).show();
-                        reducedAmount = (int) result;
-                        total -= reducedAmount;
-                        discountTotal = total;
-                        AppController.getInstance().setIsDiscountOn(true);
-                        price.setEnabled(false);
-                        ViewCart.mAdapter.swap(AppController.getInstance().getBag());
-//                        AppController.getInstance().setIsDiscountOn(false);
-                        dialog.dismiss();
+                if (Strings.isNullOrEmpty(price.getText().toString())  && Strings.isNullOrEmpty(percentage.getText().toString())) {
+                    Toast.makeText(HomeScreen.this, "Please enter Percentage or Amount", Toast.LENGTH_LONG).show();
+                    View focus = HomeScreen.this.getCurrentFocus();
+                    if (focus != null) {
+                        hiddenKeyboard(focus);
                     }
-
-                    if (percentage.getText().toString().isEmpty()) {
-                        int total = AppController.getInstance().getTotal();
-                        reducedAmount = Integer.parseInt(price.getText().toString());
-                        total -= reducedAmount;
-                        discountTotal = total;
-                        AppController.getInstance().setIsDiscountOn(true);
-                        percentage.setEnabled(false);
-                        ViewCart.mAdapter.swap(AppController.getInstance().getBag());
-//                        AppController.getInstance().setIsDiscountOn(false);
-                        dialog.dismiss();
+                    dialog.dismiss();
+                } else {
+                    if(AppController.getInstance().getBag().size() > 0){
+                        if (price.getText().toString().isEmpty()) {
+                            int total = AppController.getInstance().getTotal();
+                            int percent = Integer.parseInt(percentage.getText().toString());
+                            Toast.makeText(HomeScreen.this,  "Applying "+ percent +" % on the Total Amount ...", Toast.LENGTH_LONG).show();
+                            double p = ((double)percent / 100);
+                            double result = (double) total * p;
+                            reducedAmount = (int) result;
+                            total -= reducedAmount;
+                            discountTotal = total;
+                            AppController.getInstance().setIsDiscountOn(true);
+                            ViewCart.mAdapter.swap(AppController.getInstance().getBag());
+                            dialog.dismiss();
+                        }else if (percentage.getText().toString().isEmpty()) {
+                            int total = AppController.getInstance().getTotal();
+                            reducedAmount = Integer.parseInt(price.getText().toString());
+                            total -= reducedAmount;
+                            discountTotal = total;
+                            AppController.getInstance().setIsDiscountOn(true);
+                            percentage.setEnabled(false);
+                            ViewCart.mAdapter.swap(AppController.getInstance().getBag());
+                            dialog.dismiss();
+                        }else{
+                            Toast.makeText(HomeScreen.this,  "Can't Apply the Discount Amount", Toast.LENGTH_LONG).show();
+                            dialog.dismiss();
+                        }
                     }
                 }
             }
@@ -267,7 +264,6 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
     }
 
     private void confirmExit() {
-
         Context context = this;
         String title = "MenCity";
         String message = "Are you sure want to Exit";
@@ -314,38 +310,31 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
                 button1String,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
-                        AppController.getInstance().setIsDiscountOn(false);
+
+
                         Intent intent = null;
                         try {
                             mPrinter = new Printer(Printer.TM_T82,
                                     Printer.MODEL_CHINESE,
                                     HomeScreen.this);
-
-
                             mPrinter.setReceiveEventListener(HomeScreen.this);
 
-                            mPrinter.addTextAlign(Printer.ALIGN_CENTER);
+                            //mPrinter.addTextAlign(Printer.ALIGN_CENTER);
 
                             String printerkey="printer.design.";
 
                             mPrinter.addText(AppController.getProperty(printerkey + "shopname", getApplicationContext()));
-                            mPrinter.addCut(Printer.CUT_FEED);
                             mPrinter.addText(AppController.getProperty(printerkey + "location", getApplicationContext()));
-                            mPrinter.addCut(Printer.CUT_FEED);
                             mPrinter.addText(AppController.getProperty(printerkey + "tin", getApplicationContext()));
-                            mPrinter.addCut(Printer.CUT_FEED);
                             mPrinter.addText(AppController.getProperty(printerkey + "tin", getApplicationContext()));
-                            mPrinter.addCut(Printer.CUT_FEED);
 
-                            mPrinter.addTextAlign(Printer.ALIGN_LEFT);
+                            /*mPrinter.addTextAlign(Printer.ALIGN_LEFT);
                             DateFormat df = new SimpleDateFormat("dd-MM-yy hh:mm a");
                             mPrinter.addText(" Date: " + df.format(new Date()));
-                            mPrinter.addCut(Printer.CUT_FEED);
-                            mPrinter.addCut(Printer.CUT_FEED);
                             mPrinter.addTextAlign(Printer.ALIGN_CENTER);
                             mPrinter.addText("------------------------------------");
                             mPrinter.addTextAlign(Printer.ALIGN_LEFT);
-                            mPrinter.addText("No\tItem\t\tQty\tPrice\tTotal");
+                            mPrinter.addText("---No\tItem\t\tQty\tPrice\tTotal");
                             int itemNo=0;
                             for(LineItem lineItem:AppController.getInstance().getBag()){
                                 String temp=String.format("%2s", itemNo+"\t")+
@@ -354,7 +343,7 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
                                                 String.format("%4s", lineItem.getPrice())+"\t"+
                                                 String.format("%8s", lineItem.getTotal()));
                                 mPrinter.addText(temp);
-                                mPrinter.addCut(Printer.CUT_FEED);
+
                             }
                             mPrinter.addTextAlign(Printer.ALIGN_CENTER);
                             mPrinter.addText("------------------------------------");
@@ -362,9 +351,9 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
                                     String.format("%-10s", "")+"\t"+
                                     String.format("%-3s", "")+"\t"+
                                     String.format("%4s", "")+"\t"+
-                                    String.format("%8s", AppController.getInstance().getTotal());
-                            mPrinter.addText(temp);
-
+                                    String.format("%8s", AppController.getInstance().getTotal());*/
+                            //mPrinter.addText(temp);
+                            mPrinter.addCut(Printer.CUT_FEED);
                             mPrinter.connect("TCP:192.168.2.2", Printer.PARAM_DEFAULT);
 
                             mPrinter.beginTransaction();
@@ -380,6 +369,7 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
                         AppController.getInstance().getEditor().
                                 putInt("billno", ((int) AppController.getInstance().getSharedpreferences().getInt("billno", 0) + 1));
                         AppController.getInstance().getEditor().commit();
+                        AppController.getInstance().setIsDiscountOn(false);
                         clearList();
                         viewPager.setCurrentItem(0, true);
 
@@ -440,12 +430,6 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
         runOnUiThread(new Runnable() {
             @Override
             public synchronized void run() {
-                // ShowMsg.showResult(code, makeErrorMessage(status), mContext);
-
-                //dispPrinterWarnings(status);
-
-                //updateButtonState(true);
-
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -488,6 +472,7 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
         try {
             mPrinter.disconnect();
         } catch (final Exception e) {
+            e.printStackTrace();
             runOnUiThread(new Runnable() {
                 @Override
                 public synchronized void run() {
@@ -518,7 +503,6 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
 
         @Override
         public Fragment getItem(int position) {
-            Log.d("Position",""+position);
            return mFragments.get(position);
 
         }
