@@ -60,6 +60,7 @@ public class AppController extends Application {
 
         if(sharedpreferences.getInt("billno",0) == 0){
             editor.putInt("billno",1);
+            editor.commit();
         }
         mInstance = this;
     }

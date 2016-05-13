@@ -85,11 +85,11 @@ public class ViewCart extends android.support.v4.app.Fragment implements Receive
 
     @Override
     public void onPauseFragment() {
-        Log.d("onPause", "onPause");
+        Log.d("ViewCart", "onPause");
     }
 
     @Override
     public void onResumeFragment() {
-        Log.d("OnResume","OnResume");
+        Log.d("ViewCart","OnResume");
     }
 }

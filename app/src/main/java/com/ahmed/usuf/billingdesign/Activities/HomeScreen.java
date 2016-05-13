@@ -52,20 +52,17 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
     public static int discountTotal, reducedAmount;
     public static boolean isDiscountSet = false;
     public static boolean isBillChanged = false;
-    public clearList clearCallBack;
     private Adapter adapter;
+    ViewPager viewPager;
 
-
-    public interface clearList {
-        public void clearListValues();
-    }
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        final ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+
+        viewPager = (ViewPager) findViewById(R.id.viewpager);
         if (viewPager != null) {
             setupViewPager(viewPager);
         }
@@ -81,6 +78,7 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
                 confirmPrint();
             }
         });
+
         FloatingActionButton clearfab = (FloatingActionButton) findViewById(R.id.clearbutton);
         clearfab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,6 +86,7 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
                 clearList();
             }
         });
+
         FloatingActionButton server = (FloatingActionButton) findViewById(R.id.server);
         server.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,6 +95,7 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
 
             }
         });
+
         FloatingActionButton fab2 = (FloatingActionButton) findViewById(R.id.discount);
         fab2.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,6 +103,7 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
                 discountDialog();
             }
         });
+
         fab.setVisibility(View.GONE);
         final FrameLayout frame = (FrameLayout) findViewById(R.id.frame);
         final FrameLayout frameserver = (FrameLayout) findViewById(R.id.frameserver);
@@ -123,10 +124,10 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
                 @Override
                 public void onPageSelected(int newPosition) {
 
-                    fragmentLifeCycle fragmentToShow = (fragmentLifeCycle)adapter.getItem(newPosition);
+                    fragmentLifeCycle fragmentToShow = (fragmentLifeCycle) adapter.getItem(newPosition);
                     fragmentToShow.onResumeFragment();
 
-                    fragmentLifeCycle fragmentToHide = (fragmentLifeCycle)adapter.getItem(currentPosition);
+                    fragmentLifeCycle fragmentToHide = (fragmentLifeCycle) adapter.getItem(currentPosition);
                     fragmentToHide.onPauseFragment();
 
                     currentPosition = newPosition;
@@ -143,7 +144,7 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition());//setting current selected item over viewpager
+                //viewPager.setCurrentItem(tab.getPosition());//setting current selected item over viewpager
                 View focus;
                 switch (tab.getPosition()) {
                     case 0:
@@ -300,7 +301,7 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
                             mPrinter.setReceiveEventListener(HomeScreen.this);
 
                             StringBuilder textData = new StringBuilder();
-                            for (LineItem details : AddItem.printerList) {
+                            for (LineItem details : AppController.getInstance().getBag()) {
                                 textData.append(details.getProductName() + "\t" + details.getPrice() + "\t" + details.getQty() + "\t" + details.getTotal() + "\n");
                             }
                             Log.d("Ahmed---", "Data:" + textData);
@@ -320,8 +321,8 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
                         AppController.getInstance().getEditor().
                                 putInt("billno", ((int) AppController.getInstance().getSharedpreferences().getInt("billno", 0) + 1));
                         AppController.getInstance().getEditor().commit();
-                        isBillChanged = true;
                         clearList();
+                        viewPager.setCurrentItem(0,true);
 
                     }
                 }
@@ -369,7 +370,7 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        adapter = new Adapter(getSupportFragmentManager(),this);
+        adapter = new Adapter(getSupportFragmentManager(), this);
         adapter.addFragment(new AddItem(), "Bill It!!");
         adapter.addFragment(new ViewCart(), "Bill Details");
         viewPager.setAdapter(adapter);
@@ -444,9 +445,9 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
         private final List<String> mFragmentTitles = new ArrayList<>();
         private static Context context;
 
-        public Adapter(FragmentManager fm,Context c) {
+        public Adapter(FragmentManager fm, Context c) {
             super(fm);
-            context=c;
+            context = c;
         }
 
 
@@ -458,22 +459,11 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
 
         @Override
         public Fragment getItem(int position) {
-            switch (position) {
-                case 0:
-                    Bundle b = new Bundle();
-                    b.putInt("billno", AppController.getInstance().getSharedpreferences().getInt("billno", 0));
-                    AddItem addItem = new AddItem();
-                    addItem.setArguments(b);
-                    Toast.makeText(context,"insideCase 0",Toast.LENGTH_LONG).show();
-                    return addItem;
+            Log.d("Position",""+position);
+           return mFragments.get(position);
 
-
-                case 1:
-                    return new ViewCart();
-
-            }
-            return new AddItem();
         }
+
 
         @Override
         public int getCount() {
@@ -484,6 +474,7 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
         public CharSequence getPageTitle(int position) {
             return mFragmentTitles.get(position);
         }
+
     }
 
     @Override

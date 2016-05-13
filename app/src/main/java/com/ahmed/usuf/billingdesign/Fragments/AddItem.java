@@ -42,7 +42,6 @@ public class AddItem extends Fragment implements fragmentLifeCycle{
     String[] productNames;
     String[] qt;
     public EditText prc,tot,billno;
-    HomeScreen.clearList callBack;
     AppCompatSpinner pName,qty;
 
     public static List<LineItem> printerList;
@@ -93,8 +92,6 @@ public class AddItem extends Fragment implements fragmentLifeCycle{
             }
 
         });
-
-        final RecycleViewAdapter recycleViewAdapter=new RecycleViewAdapter();
 
         FloatingActionButton fab=(FloatingActionButton)v.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -170,12 +167,6 @@ public class AddItem extends Fragment implements fragmentLifeCycle{
                 if (focus != null) {
                     hiddenKeyboard(focus);
                 }
-                if (prc.getText().toString().isEmpty()) {
-
-                } else {
-                    prc.setText("");
-                    tot.setText("");
-                }
             }
 
             @Override
@@ -231,6 +222,7 @@ public class AddItem extends Fragment implements fragmentLifeCycle{
     public void onResume() {
         super.onResume();
         if (AppController.getInstance().getSharedpreferences().contains("billno")) {
+            Toast.makeText(getActivity(), "Insidebillno Contains", Toast.LENGTH_SHORT).show();
             billno.setText("" + AppController.getInstance().getSharedpreferences().getInt("billno", 0));
         }
     }
@@ -238,11 +230,15 @@ public class AddItem extends Fragment implements fragmentLifeCycle{
 
     @Override
     public void onPauseFragment() {
-        Log.d("onPause", "onPause");
+        Log.d("AddItem", "onPause");
+
     }
 
     @Override
     public void onResumeFragment() {
-        Log.d("OnResume", "OnResume");
+        Log.d("AddItem", "OnResume");
+        if (AppController.getInstance().getSharedpreferences().contains("billno")) {
+            billno.setText("" + AppController.getInstance().getSharedpreferences().getInt("billno", 0));
+        }
     }
 }
