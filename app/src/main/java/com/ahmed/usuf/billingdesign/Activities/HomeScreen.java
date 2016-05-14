@@ -39,6 +39,11 @@ import com.epson.epos2.printer.PrinterStatusInfo;
 import com.epson.epos2.printer.ReceiveListener;
 import com.google.common.base.Strings;
 
+import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -311,56 +316,85 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
 
-
                         Intent intent = null;
                         try {
                             mPrinter = new Printer(Printer.TM_T82,
                                     Printer.MODEL_CHINESE,
                                     HomeScreen.this);
+
                             mPrinter.setReceiveEventListener(HomeScreen.this);
-
-                            //mPrinter.addTextAlign(Printer.ALIGN_CENTER);
-
                             String printerkey="printer.design.";
+                            mPrinter.addTextSize(4, 2);
+                            mPrinter.addTextAlign(Printer.ALIGN_CENTER);
+                            mPrinter.addText("MEN CITY");
+                            mPrinter.addFeedLine(2);
 
-                            mPrinter.addText(AppController.getProperty(printerkey + "shopname", getApplicationContext()));
+                            mPrinter.addTextSize(1, 1);
                             mPrinter.addText(AppController.getProperty(printerkey + "location", getApplicationContext()));
-                            mPrinter.addText(AppController.getProperty(printerkey + "tin", getApplicationContext()));
-                            mPrinter.addText(AppController.getProperty(printerkey + "tin", getApplicationContext()));
+                            mPrinter.addFeedLine(1);
 
-                            /*mPrinter.addTextAlign(Printer.ALIGN_LEFT);
-                            DateFormat df = new SimpleDateFormat("dd-MM-yy hh:mm a");
-                            mPrinter.addText(" Date: " + df.format(new Date()));
+                            mPrinter.addTextSize(2, 1);
                             mPrinter.addTextAlign(Printer.ALIGN_CENTER);
-                            mPrinter.addText("------------------------------------");
+                            mPrinter.addText("Mobile : 9900280517");
+                            mPrinter.addFeedLine(2);
+
+
+                            mPrinter.addTextSize(1, 1);
+                            mPrinter.addText(AppController.getProperty(printerkey + "tin", getApplicationContext()));
+                            mPrinter.addText("\t");
+                            LocalDateTime localDateTime = new LocalDateTime();
+                            DateTimeFormatter fmt = DateTimeFormat.forPattern("d/MM/yy hh:mm a");
+                            String str = localDateTime.toString(fmt);
+                            mPrinter.addText(str);
+                            mPrinter.addFeedLine(1);
+
+                            mPrinter.addTextAlign(Printer.ALIGN_CENTER);
+                            mPrinter.addText("\tBill No : " + Strings.padStart("" + AppController.getInstance().getSharedpreferences().getInt("billno", 0), 5, '0'));
+                            mPrinter.addFeedLine(1);
                             mPrinter.addTextAlign(Printer.ALIGN_LEFT);
-                            mPrinter.addText("---No\tItem\t\tQty\tPrice\tTotal");
-                            int itemNo=0;
-                            for(LineItem lineItem:AppController.getInstance().getBag()){
-                                String temp=String.format("%2s", itemNo+"\t")+
-                                        String.format("%-10s", lineItem.getProductName())+"\t"+
-                                        String.format("%3s", lineItem.getQty()+"\t"+
-                                                String.format("%4s", lineItem.getPrice())+"\t"+
-                                                String.format("%8s", lineItem.getTotal()));
-                                mPrinter.addText(temp);
+                            mPrinter.addText("------------------------------------------------\n");
+                            mPrinter.addText("No\tItem\t\tPrice\tQty\t Total\n");
+                            mPrinter.addText("------------------------------------------------\n");
 
+                            StringBuffer sb = new StringBuffer("");
+                            if (AppController.getInstance().getBag().size() > 0) {
+                                int itemNo=0,qtyCount=0;
+                                for(LineItem lineItem:AppController.getInstance().getBag()){
+                                    String temp=String.format("%2s", ++itemNo +"\t")+
+                                            String.format("%-10s", lineItem.getProductName())+"\t"+String.format("%4s", lineItem.getPrice())+"\t"+
+                                    String.format("%3s", lineItem.getQty()+"\t"+ String.format("%8s", lineItem.getTotal() +"\n"));
+                                    sb.append(temp);
+                                    qtyCount+=Integer.parseInt(lineItem.getQty());
+                                }
+
+                                mPrinter.addText(sb.toString());
+                                mPrinter.addText("------------------------------------------------\n");
+                                mPrinter.addTextAlign(Printer.ALIGN_LEFT);
+
+                                mPrinter.addText("\t \t" + qtyCount + "\t " + AppController.getInstance().getTotal() + "\n");
+                                mPrinter.addText("------------------------------------------------\n");
+                                mPrinter.addFeedLine(1);
+                                if(AppController.getInstance().isDiscountOn()){
+                                    mPrinter.addText("Discount : -" + HomeScreen.reducedAmount);
+                                    mPrinter.addText("------------------------------------------------\n");
+                                    mPrinter.addTextAlign(Printer.ALIGN_CENTER);
+                                    mPrinter.addTextSize(2, 2);
+                                    mPrinter.addText(""+HomeScreen.discountTotal);
+                                    mPrinter.addFeedLine(1);
+                                }else{
+                                    mPrinter.addTextAlign(Printer.ALIGN_CENTER);
+                                    mPrinter.addTextSize(2, 2);
+                                    mPrinter.addText(""+AppController.getInstance().getTotal());
+                                    mPrinter.addFeedLine(1);
+                                }
                             }
-                            mPrinter.addTextAlign(Printer.ALIGN_CENTER);
-                            mPrinter.addText("------------------------------------");
-                            String temp=String.format("%2s", "")+"\t"+
-                                    String.format("%-10s", "")+"\t"+
-                                    String.format("%-3s", "")+"\t"+
-                                    String.format("%4s", "")+"\t"+
-                                    String.format("%8s", AppController.getInstance().getTotal());*/
-                            //mPrinter.addText(temp);
-                            mPrinter.addCut(Printer.CUT_FEED);
+
+                            mPrinter.addCut(Printer.PARAM_DEFAULT);
                             mPrinter.connect("TCP:192.168.2.2", Printer.PARAM_DEFAULT);
-
                             mPrinter.beginTransaction();
-
                             mPrinter.sendData(Printer.PARAM_DEFAULT);
 
-                            mPrinter.disconnect();
+//                          mPrinter.disconnect();
                         } catch (Epos2Exception e) {
                             e.printStackTrace();
                         } catch (IOException e) {

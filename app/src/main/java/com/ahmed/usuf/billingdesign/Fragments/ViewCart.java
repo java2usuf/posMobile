@@ -99,13 +99,16 @@ public class ViewCart extends android.support.v4.app.Fragment implements Receive
 
     @Override
     public void onResumeFragment() {
-        Log.d("ViewCart","OnResume");
-        emptycart=(TextView)getActivity().findViewById(R.id.empty);
-        if (AppController.getInstance().getBag().size()>0)
-        {
-            emptycart.setVisibility(View.GONE);
-        }else {
-            emptycart.setVisibility(View.VISIBLE);
+        try {
+            emptycart=(TextView)getActivity().findViewById(R.id.empty);
+            if (AppController.getInstance().getBag().size()>0)
+            {
+                emptycart.setVisibility(View.GONE);
+            }else {
+                emptycart.setVisibility(View.VISIBLE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

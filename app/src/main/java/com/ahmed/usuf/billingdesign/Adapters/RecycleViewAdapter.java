@@ -101,8 +101,6 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
             return;
         }
 
-
-
         if (position + 1 == rowLength - 2 && AppController.getInstance().isDiscountOn()) {
             holder.itemName.setVisibility(View.GONE);
             holder.priceView.setVisibility(View.GONE);
@@ -137,10 +135,13 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         holder.totalView.setWidth(HomeScreen.width);
         holder.totalView.setGravity(Gravity.CENTER_HORIZONTAL);
         holder.totalView.setTextColor(Color.parseColor("#FF5722"));
+        holder.totalView.setTypeface(Typeface.SANS_SERIF);
 
-
-        holder.totalView.setTypeface(Typeface.SANS_SERIF );
-        holder.totalView.setText("\u20B9 " + AppController.getInstance().getTotal());
+        if(AppController.getInstance().isDiscountOn()){
+            holder.totalView.setText("\u20B9 " + HomeScreen.discountTotal);
+        }else{
+            holder.totalView.setText("\u20B9 " + AppController.getInstance().getTotal());
+        }
     }
 
     private void addLineItem(MyViewHolder holder, int position) {
@@ -170,7 +171,6 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         holder.priceView.setText("PRICE");
         holder.totalView.setText("TOTAL");
         holder.qtyView.setText("QTY");
-
 
         holder.priceView.setTextColor(Color.parseColor("#33cc33"));
         holder.totalView.setTextColor(Color.parseColor("#33cc33"));

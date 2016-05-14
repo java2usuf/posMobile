@@ -8,10 +8,13 @@ import android.text.TextUtils;
 
 import com.ahmed.usuf.billingdesign.Adapters.LineItem;
 import com.ahmed.usuf.billingdesign.R;
+import com.ahmed.usuf.billingdesign.data.TrasactionDetails;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
+
+import net.danlew.android.joda.JodaTimeAndroid;
 
 import java.io.FileOutputStream;
 import java.io.FileWriter;
@@ -31,18 +34,11 @@ public class AppController extends Application {
     private boolean isDiscountOn=false;
     private SharedPreferences.Editor editor;
     private List<LineItem> bag = new ArrayList<LineItem>();
+
+
+    private TrasactionDetails txnDetails = new TrasactionDetails();
     private SharedPreferences sharedpreferences;
     private static AppController mInstance;
-
-
-    public List<LineItem> getBag() {
-        return bag;
-    }
-
-    public void setBag(List<LineItem> bag) {
-        this.bag = bag;
-    }
-
     public boolean isDiscountOn() {
         return isDiscountOn;
     }
@@ -60,6 +56,23 @@ public class AppController extends Application {
     }
 
 
+    public TrasactionDetails getTxnDetails() {
+        return txnDetails;
+    }
+
+    public void setTxnDetails(TrasactionDetails txnDetails) {
+        this.txnDetails = txnDetails;
+    }
+
+
+    public List<LineItem> getBag() {
+        return bag;
+    }
+
+    public void setBag(List<LineItem> bag) {
+        this.bag = bag;
+    }
+
     public int getTotal(){
         int totalCount =  0;
         for (LineItem details: AppController.getInstance().getBag()){
@@ -71,6 +84,7 @@ public class AppController extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        JodaTimeAndroid.init(this);
         sharedpreferences = getSharedPreferences("MyPref", Context.MODE_PRIVATE);
         editor = sharedpreferences.edit();
 
@@ -106,12 +120,6 @@ public class AppController extends Application {
     public void setSharedpreferences(SharedPreferences sharedpreferences) {
         this.sharedpreferences = sharedpreferences;
     }
-
-
-
-
-
-
 
     public <T> void addToRequestQueue(Request<T> req, String tag) {
         // set the default tag if tag is empty

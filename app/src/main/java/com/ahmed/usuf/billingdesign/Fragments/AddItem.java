@@ -227,6 +227,7 @@ public class AddItem extends Fragment implements fragmentLifeCycle {
         if (AppController.getInstance().getSharedpreferences().contains("billno")) {
             Toast.makeText(getActivity(), "Insidebillno Contains", Toast.LENGTH_SHORT).show();
             billno.setText(Strings.padStart("" + AppController.getInstance().getSharedpreferences().getInt("billno", 0), 5, '0'));
+            AppController.getInstance().getTxnDetails().setBillNumber(AppController.getInstance().getSharedpreferences().getInt("billno", 0));
         }
     }
 
@@ -247,6 +248,7 @@ public class AddItem extends Fragment implements fragmentLifeCycle {
             try {
                 AppController.getInstance().getSharedpreferences();
                 billno.setText(Strings.padStart("" + AppController.getInstance().getSharedpreferences().getInt("billno", 0), 5, '0'));
+                AppController.getInstance().getTxnDetails().setBillNumber(AppController.getInstance().getSharedpreferences().getInt("billno", 0));
             } catch (Exception e) {
                 e.printStackTrace();
             }
