@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MenCity POS</string>
+    <string name="app_name">SRM-Billing</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
@@ -66,4 +66,5 @@
     <string name="handlingmsg_err_battery_real_end">Please connect AC adapter or change the battery.\nBattery of printer is almost empty.\n</string>
     <string name="handlingmsg_err_offline">Printer is offline.\n</string>
     <string name="title_activity_login">LoginActivity</string>
+    <string name="rupeeSymbol">\u20B9</string>
 </resources>

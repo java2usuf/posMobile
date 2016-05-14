@@ -84,7 +84,7 @@
                     android:inputType="number"
                     android:imeOptions="actionDone"
                     android:singleLine="true"
-                    android:hint="PRICE"
+                    android:hint="@string/rupeeSymbol"
                     android:textSize="50dp"
                     android:textColor="@android:color/holo_blue_dark"
                     android:gravity="center"

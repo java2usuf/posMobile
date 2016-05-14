@@ -390,7 +390,7 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
                             }
 
                             mPrinter.addCut(Printer.PARAM_DEFAULT);
-                            mPrinter.connect("TCP:192.168.2.2", Printer.PARAM_DEFAULT);
+                            mPrinter.connect("TCP:"+ AppController.getInstance().getPrinterIpAddress(), Printer.PARAM_DEFAULT);
                             mPrinter.beginTransaction();
                             mPrinter.sendData(Printer.PARAM_DEFAULT);
 

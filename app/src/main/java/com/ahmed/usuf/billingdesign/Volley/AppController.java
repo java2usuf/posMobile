@@ -33,6 +33,16 @@ public class AppController extends Application {
     private RequestQueue mRequestQueue;
     private boolean isDiscountOn=false;
     private SharedPreferences.Editor editor;
+
+    public String getPrinterIpAddress() {
+        return printerIpAddress;
+    }
+
+    public void setPrinterIpAddress(String printerIpAddress) {
+        this.printerIpAddress = printerIpAddress;
+    }
+
+    private String printerIpAddress = "192.168.2.2";
     private List<LineItem> bag = new ArrayList<LineItem>();
 
 

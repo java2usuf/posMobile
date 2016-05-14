@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="printer_ip_address">
+        <item>192.168.192.168</item>
+        <item>192.168.2.1</item>
+        <item>192.168.2.2</item>
+        <item>192.168.2.3</item>
+        <item>192.168.2.4</item>
+        <item>192.168.2.5</item>
+        <item>192.168.2.6</item>
+        <item>192.168.2.7</item>
+        <item>192.168.2.8</item>
+        <item>192.168.2.9</item>
+        <item>192.168.192.168</item>
+    </array>
+</resources>

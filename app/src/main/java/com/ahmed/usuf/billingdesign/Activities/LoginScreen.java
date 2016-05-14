@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
@@ -12,6 +13,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ahmed.usuf.billingdesign.R;
+import com.ahmed.usuf.billingdesign.Volley.AppController;
+import com.ahmed.usuf.billingdesign.utili.HttpClient;
+import com.google.common.base.Strings;
 
 public class LoginScreen extends AppCompatActivity {
 
@@ -78,6 +82,41 @@ public class LoginScreen extends AppCompatActivity {
          * Validating form
          */
         private void submitForm() {
+
+
+            Thread thread = new Thread(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    try
+                    {
+                        String[] tab_names = getResources().getStringArray(R.array.printer_ip_address);
+                        for(String ip : tab_names){
+                            String response = new HttpClient().sendMessage("http://"+ip,"");
+
+
+                            Log.i("PRINTER ** CONNECTING ...", "IP ADDRESS *****  "+ ip);
+
+                            if(response.contains("EPSON TMNet WebConfig Ver.1.00")){
+                                Log.i("PRINTER ** CONNECTED ********************", "IP ADDRESS *****  "+ ip);
+                                AppController.getInstance().setPrinterIpAddress(ip);
+                                break;
+                            }
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+            thread.start();
+
+
+
+
             if (!validateName()) {
                 return;
             }
@@ -139,29 +178,3 @@ public class LoginScreen extends AppCompatActivity {
 
     }
 
-/*private class MyTextWatcher implements TextWatcher {
-
-            private View view;
-
-            private MyTextWatcher(View view) {
-                this.view = view;
-            }
-
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            public void afterTextChanged(Editable editable) {
-                switch (view.getId()) {
-                    case R.id.username:
-                        validateName();
-                        break;
-                    case R.id.password:
-                        validatePassword();
-                        break;
-
-                }
-            }
-        }*/
