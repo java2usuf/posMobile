@@ -27,12 +27,14 @@ import android.widget.FrameLayout;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import com.ahmed.usuf.billingdesign.DatabaseHandler.DatabaseHandler;
 import com.ahmed.usuf.billingdesign.Fragments.AddItem;
 import com.ahmed.usuf.billingdesign.Fragments.ViewCart;
 import com.ahmed.usuf.billingdesign.Adapters.LineItem;
 import com.ahmed.usuf.billingdesign.Interfaces.fragmentLifeCycle;
 import com.ahmed.usuf.billingdesign.R;
 import com.ahmed.usuf.billingdesign.Volley.AppController;
+import com.ahmed.usuf.billingdesign.data.TrasactionDetails;
 import com.epson.epos2.Epos2Exception;
 import com.epson.epos2.printer.Printer;
 import com.epson.epos2.printer.PrinterStatusInfo;
@@ -67,6 +69,7 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
     public static boolean isBillChanged = false;
     private Adapter adapter;
     ViewPager viewPager;
+    DatabaseHandler db;
 
 
 
@@ -74,7 +77,7 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        db=new DatabaseHandler(this);
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         if (viewPager != null) {
             setupViewPager(viewPager);
@@ -107,16 +110,20 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
             @Override
             public void onClick(View v) {
                 //ServerCodegoesHere
-                try {
-                    //load a properties file
-
-                    //get the property value and print it out
-                    Toast.makeText(getBaseContext(),""+AppController.getProperty("printer.design.shopname",getApplicationContext()),Toast.LENGTH_LONG).show();
-
-                } catch (IOException ex) {
-                    ex.printStackTrace();
+                LocalDateTime localDateTime = new LocalDateTime();
+                DateTimeFormatter fmt;
+                fmt = DateTimeFormat.forPattern("d/MM/yy");
+                String str = localDateTime.toString(fmt);
+                List<TrasactionDetails> trasactionDetailsList=db.getAllTransantions();
+                int finalTotal=0,discountedTotal=0;
+                for (TrasactionDetails details:trasactionDetailsList){
+                    if (details.getDate().contains(str)){
+                        finalTotal+=details.getFinalTotal();
+                        discountedTotal+=details.getDiscountedTotal();
+                    }
                 }
 
+                Toast.makeText(HomeScreen.this,"Total :"+finalTotal+" DisCounted :"+discountedTotal,Toast.LENGTH_LONG).show();
             }
         });
 
@@ -379,7 +386,7 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
                                     mPrinter.addText("------------------------------------------------\n");
                                     mPrinter.addTextAlign(Printer.ALIGN_CENTER);
                                     mPrinter.addTextSize(2, 2);
-                                    mPrinter.addText(""+HomeScreen.discountTotal);
+                                    mPrinter.addText("" +HomeScreen.discountTotal);
                                     mPrinter.addFeedLine(1);
                                 }else{
                                     mPrinter.addTextAlign(Printer.ALIGN_CENTER);
@@ -393,7 +400,9 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
                             mPrinter.connect("TCP:"+ AppController.getInstance().getPrinterIpAddress(), Printer.PARAM_DEFAULT);
                             mPrinter.beginTransaction();
                             mPrinter.sendData(Printer.PARAM_DEFAULT);
-
+                            Log.d("DB Before", "" + db.getTxnCount());
+                            db.addTransaction(new TrasactionDetails(AppController.getInstance().getTotal(), str, discountTotal));
+                            Log.d("DB Before", "" + db.getTxnCount());
 //                          mPrinter.disconnect();
                         } catch (Epos2Exception e) {
                             e.printStackTrace();
