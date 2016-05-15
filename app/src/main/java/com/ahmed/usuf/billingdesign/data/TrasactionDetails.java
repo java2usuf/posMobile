@@ -1,5 +1,9 @@
 package com.ahmed.usuf.billingdesign.data;
 
+import org.joda.time.LocalDateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 /**
  * Created by myousuff on 5/14/16.
  */
@@ -8,6 +12,16 @@ public class TrasactionDetails {
     private int finalTotal;
     private String date;
     private int discountedTotal;
+    private int discount;
+
+
+    public int getDiscount() {
+        return finalTotal- discountedTotal;
+    }
+
+    public void setDiscount(int discount) {
+        this.discount = discount;
+    }
 
     public TrasactionDetails(int finalTotal, String date, int discountedTotal) {
         this.finalTotal = finalTotal;
@@ -24,9 +38,20 @@ public class TrasactionDetails {
         this.discountedTotal = discountedTotal;
     }
 
-    public TrasactionDetails(int finalTotal, String date) {
+    public TrasactionDetails(int finalTotal, int discountedTotal) {
+
+        LocalDateTime localDateTime = new LocalDateTime();
+        DateTimeFormatter fmt = DateTimeFormat.forPattern("d/MM/yy");
+        String str = localDateTime.toString(fmt);
+        date = str;
+
+        if(discountedTotal == 0){
+            discountedTotal = finalTotal;
+        }
+
+
         this.finalTotal = finalTotal;
-        this.date = date;
+        this.discountedTotal = discountedTotal;
     }
 
     public String getDate() {

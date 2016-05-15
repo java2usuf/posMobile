@@ -115,15 +115,20 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
                 fmt = DateTimeFormat.forPattern("d/MM/yy");
                 String str = localDateTime.toString(fmt);
                 List<TrasactionDetails> trasactionDetailsList=db.getAllTransantions();
-                int finalTotal=0,discountedTotal=0;
+                int billableAmount=0,discountAmount=0;
                 for (TrasactionDetails details:trasactionDetailsList){
                     if (details.getDate().contains(str)){
-                        finalTotal+=details.getFinalTotal();
-                        discountedTotal+=details.getDiscountedTotal();
+
+                        if(details.getDiscount() == 0){
+                            billableAmount+=details.getFinalTotal();
+                        }else{
+                            billableAmount+=details.getDiscountedTotal();
+                        }
+
+                        discountAmount+=details.getDiscount();
                     }
                 }
-
-                Toast.makeText(HomeScreen.this,"Total :"+finalTotal+" DisCounted :"+discountedTotal,Toast.LENGTH_LONG).show();
+                Toast.makeText(HomeScreen.this,"Today's Summary: "+rupeeFormat(""+billableAmount)+"  --  Discount % :"+rupeeFormat(""+discountAmount),Toast.LENGTH_LONG).show();
             }
         });
 
@@ -214,6 +219,28 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
         width = size.x;
         height = size.y;
     }
+
+
+
+    public static String rupeeFormat(String value){
+        value=value.replace(",","");
+        char lastDigit=value.charAt(value.length()-1);
+        String result = "";
+        int len = value.length()-1;
+        int nDigits = 0;
+
+        for (int i = len - 1; i >= 0; i--)
+        {
+            result = value.charAt(i) + result;
+            nDigits++;
+            if (((nDigits % 2) == 0) && (i > 0))
+            {
+                result = "," + result;
+            }
+        }
+        return (result+lastDigit);
+    }
+
 
     private void clearList() {
         AppController.getInstance().getBag().clear();
@@ -397,18 +424,19 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
                             }
 
                             mPrinter.addCut(Printer.PARAM_DEFAULT);
-                            mPrinter.connect("TCP:"+ AppController.getInstance().getPrinterIpAddress(), Printer.PARAM_DEFAULT);
+                            mPrinter.connect("TCP:" + AppController.getInstance().getPrinterIpAddress(), Printer.PARAM_DEFAULT);
                             mPrinter.beginTransaction();
                             mPrinter.sendData(Printer.PARAM_DEFAULT);
-                            Log.d("DB Before", "" + db.getTxnCount());
-                            db.addTransaction(new TrasactionDetails(AppController.getInstance().getTotal(), str, discountTotal));
-                            Log.d("DB Before", "" + db.getTxnCount());
-//                          mPrinter.disconnect();
                         } catch (Epos2Exception e) {
                             e.printStackTrace();
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
+
+                        Log.d("DB Before", "" + db.getTxnCount());
+                        db.addTransaction(new TrasactionDetails(AppController.getInstance().getTotal(),discountTotal));
+                        Log.d("DB Before", "" + db.getTxnCount());
+
                         AppController.getInstance().getEditor().
                                 putInt("billno", ((int) AppController.getInstance().getSharedpreferences().getInt("billno", 0) + 1));
                         AppController.getInstance().getEditor().commit();
