@@ -57,7 +57,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
 
         ContentValues values = new ContentValues();
         values.put(KEY_FINAL_TOTAL, txn.getFinalTotal());
-        values.put(KEY_DISCOUNT_TOTAL, txn.getDiscountedTotal());
+        values.put(KEY_DISCOUNT_TOTAL, txn.getDiscount());
         values.put(KEY_DATE, txn.getDate());
         // Inserting Row
         db.insert(TABLE_TRANSACTION, null, values);
@@ -78,7 +78,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
             do {
                 TrasactionDetails txn = new TrasactionDetails();
                 txn.setFinalTotal(Integer.parseInt(cursor.getString(1)));
-                txn.setDiscountedTotal(Integer.parseInt(cursor.getString(2)));
+                txn.setDiscount(Integer.parseInt(cursor.getString(2)));
                 txn.setDate(cursor.getString(3));
                 // Adding contact to list
                 txnList.add(txn);

@@ -15,18 +15,29 @@ public class TrasactionDetails {
     private int discount;
 
 
+    @Override
+    public String toString() {
+        return "TrasactionDetails{" +
+                "billNumber=" + billNumber +
+                ", finalTotal=" + finalTotal +
+                ", date='" + date + '\'' +
+                ", discountedTotal=" + discountedTotal +
+                ", discount=" + discount +
+                '}';
+    }
+
     public int getDiscount() {
-        return finalTotal- discountedTotal;
+        return discount;
     }
 
     public void setDiscount(int discount) {
         this.discount = discount;
     }
 
-    public TrasactionDetails(int finalTotal, String date, int discountedTotal) {
+    public TrasactionDetails(int finalTotal, String date, int discount) {
         this.finalTotal = finalTotal;
         this.date = date;
-        this.discountedTotal = discountedTotal;
+        this.discount = discount;
     }
 
     public int getDiscountedTotal() {
@@ -38,20 +49,14 @@ public class TrasactionDetails {
         this.discountedTotal = discountedTotal;
     }
 
-    public TrasactionDetails(int finalTotal, int discountedTotal) {
+    public TrasactionDetails(int finalTotal, int discount) {
 
         LocalDateTime localDateTime = new LocalDateTime();
         DateTimeFormatter fmt = DateTimeFormat.forPattern("d/MM/yy");
         String str = localDateTime.toString(fmt);
         date = str;
-
-        if(discountedTotal == 0){
-            discountedTotal = finalTotal;
-        }
-
-
+        this.discount=discount;
         this.finalTotal = finalTotal;
-        this.discountedTotal = discountedTotal;
     }
 
     public String getDate() {

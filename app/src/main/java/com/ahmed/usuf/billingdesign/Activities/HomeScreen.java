@@ -116,19 +116,16 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
                 String str = localDateTime.toString(fmt);
                 List<TrasactionDetails> trasactionDetailsList=db.getAllTransantions();
                 int billableAmount=0,discountAmount=0;
+
+                Log.d("DatabaseChecking","TxnList: "+db.getAllTransantions());
+
                 for (TrasactionDetails details:trasactionDetailsList){
                     if (details.getDate().contains(str)){
-
-                        if(details.getDiscount() == 0){
-                            billableAmount+=details.getFinalTotal();
-                        }else{
-                            billableAmount+=details.getDiscountedTotal();
-                        }
-
+                        billableAmount+=details.getFinalTotal();
                         discountAmount+=details.getDiscount();
                     }
                 }
-                Toast.makeText(HomeScreen.this,"Today's Summary: "+rupeeFormat(""+billableAmount)+"  --  Discount % :"+rupeeFormat(""+discountAmount),Toast.LENGTH_LONG).show();
+                Toast.makeText(HomeScreen.this,"2354134652-"+billableAmount+"%%7658486543-"+discountAmount,Toast.LENGTH_LONG).show();
             }
         });
 
@@ -360,7 +357,7 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
                             String printerkey="printer.design.";
                             mPrinter.addTextSize(4, 2);
                             mPrinter.addTextAlign(Printer.ALIGN_CENTER);
-                            mPrinter.addText("MEN CITY");
+                            mPrinter.addText(AppController.getProperty(printerkey + "shopname", getApplicationContext()));
                             mPrinter.addFeedLine(2);
 
                             mPrinter.addTextSize(1, 1);
@@ -369,21 +366,23 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
 
                             mPrinter.addTextSize(2, 1);
                             mPrinter.addTextAlign(Printer.ALIGN_CENTER);
-                            mPrinter.addText("Mobile : 9900280517");
+                            mPrinter.addText("Phone: " + AppController.getProperty(printerkey + "mobile", getApplicationContext())); ;
                             mPrinter.addFeedLine(2);
 
-
+                            mPrinter.addTextAlign(Printer.ALIGN_LEFT);
                             mPrinter.addTextSize(1, 1);
                             mPrinter.addText(AppController.getProperty(printerkey + "tin", getApplicationContext()));
                             mPrinter.addText("\t");
+
+                            mPrinter.addTextAlign(Printer.ALIGN_RIGHT);
                             LocalDateTime localDateTime = new LocalDateTime();
                             DateTimeFormatter fmt = DateTimeFormat.forPattern("d/MM/yy hh:mm a");
                             String str = localDateTime.toString(fmt);
                             mPrinter.addText(str);
                             mPrinter.addFeedLine(1);
 
-                            mPrinter.addTextAlign(Printer.ALIGN_CENTER);
-                            mPrinter.addText("\tBill No : " + Strings.padStart("" + AppController.getInstance().getSharedpreferences().getInt("billno", 0), 5, '0'));
+
+                            mPrinter.addText("Bill No : " + Strings.padStart("" + AppController.getInstance().getSharedpreferences().getInt("billno", 0), 5, '0'));
                             mPrinter.addFeedLine(1);
                             mPrinter.addTextAlign(Printer.ALIGN_LEFT);
                             mPrinter.addText("------------------------------------------------\n");
@@ -403,24 +402,40 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
 
                                 mPrinter.addText(sb.toString());
                                 mPrinter.addText("------------------------------------------------\n");
-                                mPrinter.addTextAlign(Printer.ALIGN_LEFT);
+                                //mPrinter.addTextAlign(Printer.ALIGN_LEFT);
 
-                                mPrinter.addText("\t \t" + qtyCount + "\t " + AppController.getInstance().getTotal() + "\n");
+                                ///////////////////////////////////////////
+                                String temp=String.format("%2s","\t")+
+                                        String.format("%-10s", "")+"\t"+String.format("%4s", "\t")+String.format("%3s",qtyCount+ "\t")+ String.format("%8s", AppController.getInstance().getTotal() +  "\n");
+                                ///////////////////////////////////////////
+
+                                mPrinter.addText(temp);
+
                                 mPrinter.addText("------------------------------------------------\n");
-                                mPrinter.addFeedLine(1);
                                 if(AppController.getInstance().isDiscountOn()){
-                                    mPrinter.addText("Discount : -" + HomeScreen.reducedAmount);
-                                    mPrinter.addText("------------------------------------------------\n");
-                                    mPrinter.addTextAlign(Printer.ALIGN_CENTER);
-                                    mPrinter.addTextSize(2, 2);
-                                    mPrinter.addText("" +HomeScreen.discountTotal);
+                                    mPrinter.addTextAlign(Printer.ALIGN_RIGHT);
+
+                                    mPrinter.addText("Discount : "+"-"+HomeScreen.reducedAmount);
                                     mPrinter.addFeedLine(1);
+                                    mPrinter.addTextAlign(Printer.ALIGN_CENTER);
+                                    mPrinter.addTextSize(1,2);
+                                    mPrinter.addText("------------------------------------------------\n\n\n");
+                                    mPrinter.addTextSize(3, 3);
+                                    mPrinter.addText("Total : ");
+                                    mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.FALSE, Printer.TRUE);
+                                    mPrinter.addText(HomeScreen.discountTotal + "/-");
                                 }else{
+                                    mPrinter.addText("\n\n");
                                     mPrinter.addTextAlign(Printer.ALIGN_CENTER);
-                                    mPrinter.addTextSize(2, 2);
-                                    mPrinter.addText(""+AppController.getInstance().getTotal());
-                                    mPrinter.addFeedLine(1);
+                                    mPrinter.addTextSize(3, 3);
+                                    mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.FALSE, Printer.FALSE);
+                                    mPrinter.addText("Total : ");
+                                    mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.FALSE, Printer.TRUE);
+                                    mPrinter.addText(AppController.getInstance().getTotal() + "/-");
+                                    mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.FALSE, Printer.FALSE);
                                 }
+                                mPrinter.addText("\n\n");
+                                mPrinter.addFeedLine(1);
                             }
 
                             mPrinter.addCut(Printer.PARAM_DEFAULT);
@@ -434,7 +449,12 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
                         }
 
                         Log.d("DB Before", "" + db.getTxnCount());
-                        db.addTransaction(new TrasactionDetails(AppController.getInstance().getTotal(),discountTotal));
+                        //db.addTransaction(new TrasactionDetails(AppController.getInstance().getTotal(),discountTotal));
+                        if(AppController.getInstance().isDiscountOn()) {
+                            db.addTransaction(new TrasactionDetails(HomeScreen.discountTotal, HomeScreen.reducedAmount));
+                        }else{
+                            db.addTransaction(new TrasactionDetails(AppController.getInstance().getTotal(), 0));
+                        }
                         Log.d("DB Before", "" + db.getTxnCount());
 
                         AppController.getInstance().getEditor().

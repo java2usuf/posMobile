@@ -1,28 +1,13 @@
 package com.ahmed.usuf.billingdesign.utili;
 
-import com.google.api.client.http.ByteArrayContent;
-import com.google.api.client.http.GenericUrl;
-import com.google.api.client.http.HttpContent;
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.HttpRequestFactory;
-import com.google.api.client.http.HttpResponse;
-import com.google.api.client.http.HttpTransport;
-import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.common.base.Throwables;
-import com.google.common.io.CharStreams;
-
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-
 /**
  * Created by myousuff on 5/15/16.
  */
 public class HttpClient {
-    static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
+   // static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
 
     public String sendMessage(String urlStr, String params){
-        final HttpURLConnection connection;
+        /*final HttpURLConnection connection;
         String responseString ="";
         try {
 
@@ -37,6 +22,7 @@ public class HttpClient {
         } catch (IOException e) {
             //throw Throwables.propagate(e);
         }
-        return responseString;
+        return responseString;*/
+        return "";
     }
 }
