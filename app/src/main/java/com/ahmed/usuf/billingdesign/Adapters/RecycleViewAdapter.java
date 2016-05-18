@@ -58,7 +58,6 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     }
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-
         holder.itemName.setVisibility(View.VISIBLE);
         holder.itemName.setGravity(Gravity.CENTER);
         holder.priceView.setVisibility(View.VISIBLE);

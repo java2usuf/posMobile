@@ -57,7 +57,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
 
         ContentValues values = new ContentValues();
         values.put(KEY_FINAL_TOTAL, txn.getFinalTotal());
-        values.put(KEY_DISCOUNT_TOTAL, txn.getDiscount());
+        values.put(KEY_DISCOUNT_TOTAL, txn.getDiscountedTotal());
         values.put(KEY_DATE, txn.getDate());
         // Inserting Row
         db.insert(TABLE_TRANSACTION, null, values);
@@ -66,22 +66,59 @@ public class DatabaseHandler extends SQLiteOpenHelper{
 
     // Getting All Totals and it's Dates
     public List<TrasactionDetails> getAllTransantions() {
+
         List<TrasactionDetails> txnList = new ArrayList<TrasactionDetails>();
+
         // Select All Query
         String selectQuery = "SELECT  * FROM " + TABLE_TRANSACTION;
 
         SQLiteDatabase db = this.getWritableDatabase();
+
         Cursor cursor = db.rawQuery(selectQuery, null);
 
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
             do {
+
                 TrasactionDetails txn = new TrasactionDetails();
                 txn.setFinalTotal(Integer.parseInt(cursor.getString(1)));
-                txn.setDiscount(Integer.parseInt(cursor.getString(2)));
+                txn.setDiscountedTotal(Integer.parseInt(cursor.getString(2)));
                 txn.setDate(cursor.getString(3));
+
+                // Adding contact to list
+                    txnList.add(txn);
+
+            } while (cursor.moveToNext());
+        }
+
+        // return contact list
+        return txnList;
+    }
+
+
+    public List<TrasactionDetails> getTransactionOn(String date) {
+
+        List<TrasactionDetails> txnList = new ArrayList<TrasactionDetails>();
+
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + TABLE_TRANSACTION +" WHERE "+KEY_DATE+"='"+date+"'";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+
+                TrasactionDetails txn = new TrasactionDetails();
+                txn.setFinalTotal(Integer.parseInt(cursor.getString(1)));
+                txn.setDiscountedTotal(Integer.parseInt(cursor.getString(2)));
+                txn.setDate(cursor.getString(3));
+
                 // Adding contact to list
                 txnList.add(txn);
+
             } while (cursor.moveToNext());
         }
 

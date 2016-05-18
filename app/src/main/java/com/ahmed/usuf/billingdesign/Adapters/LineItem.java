@@ -7,6 +7,9 @@ public class LineItem {
     private String qty;
     private String price;
     private String billNo;
+    private String total;
+    private String productName;
+    private String percentage;
 
     public LineItem(String qty, String price, String billNo, String total, String productName) {
         this.qty = qty;
@@ -16,12 +19,16 @@ public class LineItem {
         this.productName = productName;
     }
 
-    private String total;
-    private String productName;
-
     public String getBillNo() {
-
         return billNo;
+    }
+
+    public String getPercentage() {
+        return percentage;
+    }
+
+    public void setPercentage(String percentage) {
+        this.percentage = percentage;
     }
 
     public void setBillNo(String billNo) {

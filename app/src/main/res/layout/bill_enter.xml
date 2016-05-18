@@ -8,27 +8,21 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="?attr/actionBarSize"
         android:orientation="vertical"
-        android:paddingLeft="20dp"
+        android:layout_margin="10dp"
         android:descendantFocusability="beforeDescendants"
         android:focusableInTouchMode="true"
         >
 <ScrollView
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-        <android.support.v7.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardCornerRadius="5dp"
-            app:cardElevation="5dp"
-            android:layout_margin="5dp"
-            >
+    android:layout_width="match_parent" android:layout_marginTop="60dp"
+    android:layout_height="match_parent">
+
         <LinearLayout
             android:layout_width="match_parent" android:orientation="vertical"
             android:layout_height="wrap_content">
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/billlabel"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="4dp"
                 android:textSize="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -42,7 +36,7 @@
                     android:singleLine="true"
                     android:textAllCaps="true"
                     android:textSize="30dp"
-                    android:hint="BILL NUMBER"
+                    android:hint="normal NUMBER"
                     android:textColorHint="@color/colorPrimary"
                     android:gravity="center"
                     />
@@ -52,16 +46,16 @@
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/totallayout"
                 android:layout_width="match_parent"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="4dp"
                 android:layout_height="wrap_content">
 
                 <EditText
                     android:id="@+id/totalLabel"
                     android:layout_width="match_parent"
-                    android:layout_height="100dp"
+                    android:layout_height="80dp"
                     android:inputType="number"
                     android:focusable="false"
-                    android:textSize="80dp"
+                    android:textSize="50dp"
                     android:gravity="center"
                     android:textColor="@android:color/holo_orange_dark"
                     />
@@ -72,7 +66,7 @@
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/pricelayout"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="4dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -80,12 +74,12 @@
                     android:id="@+id/pricelabel"
                     android:focusableInTouchMode="true"
                     android:layout_width="match_parent"
-                    android:layout_height="100dp"
+                    android:layout_height="70dp"
                     android:inputType="number"
                     android:imeOptions="actionDone"
                     android:singleLine="true"
                     android:hint="@string/rupeeSymbol"
-                    android:textSize="50dp"
+                    android:textSize="40dp"
                     android:textColor="@android:color/holo_blue_dark"
                     android:gravity="center"
                     />
@@ -96,23 +90,22 @@
         <android.support.v7.widget.AppCompatSpinner
         android:layout_width="match_parent"
             style="@style/Widget.AppCompat.Spinner.Underlined"
-        android:layout_height="60dp" android:scrollbarSize="20dp"
+        android:layout_height="50dp" android:scrollbarSize="20dp"
             android:id="@+id/productname"
             android:gravity="center"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="10dp"
         />
 
         <android.support.v7.widget.AppCompatSpinner
             android:layout_width="match_parent"
             style="@style/Widget.AppCompat.Spinner.Underlined"
-            android:layout_height="60dp"
+            android:layout_height="50dp"
             android:id="@+id/qtyspinner"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="10dp"
             />
 
 
         </LinearLayout>
-        </android.support.v7.widget.CardView>
 
 
 

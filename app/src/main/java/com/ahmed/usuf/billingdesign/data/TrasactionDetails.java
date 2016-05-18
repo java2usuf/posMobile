@@ -4,6 +4,9 @@ import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by myousuff on 5/14/16.
  */
@@ -14,34 +17,28 @@ public class TrasactionDetails {
     private int discountedTotal;
     private int discount;
 
+    public TrasactionDetails(){
 
-    @Override
-    public String toString() {
-        return "TrasactionDetails{" +
-                "billNumber=" + billNumber +
-                ", finalTotal=" + finalTotal +
-                ", date='" + date + '\'' +
-                ", discountedTotal=" + discountedTotal +
-                ", discount=" + discount +
-                '}';
     }
 
-    public int getDiscount() {
-        return discount;
+    public TrasactionDetails(int finalTotal, int discountedTotal) {
+
+        LocalDateTime localDateTime = new LocalDateTime();
+        DateTimeFormatter fmt = DateTimeFormat.forPattern("d/MM/yy");
+        String str = localDateTime.toString(fmt);
+        date = str;
+
+        this.finalTotal = finalTotal;
+        this.discountedTotal = discountedTotal;
     }
 
-    public void setDiscount(int discount) {
-        this.discount = discount;
-    }
-
-    public TrasactionDetails(int finalTotal, String date, int discount) {
+    public TrasactionDetails(int finalTotal, String date, int discountedTotal) {
         this.finalTotal = finalTotal;
         this.date = date;
-        this.discount = discount;
+        this.discountedTotal = discountedTotal;
     }
 
     public int getDiscountedTotal() {
-
         return discountedTotal;
     }
 
@@ -49,22 +46,12 @@ public class TrasactionDetails {
         this.discountedTotal = discountedTotal;
     }
 
-    public TrasactionDetails(int finalTotal, int discount) {
-
-        LocalDateTime localDateTime = new LocalDateTime();
-        DateTimeFormatter fmt = DateTimeFormat.forPattern("d/MM/yy");
-        String str = localDateTime.toString(fmt);
-        date = str;
-        this.discount=discount;
-        this.finalTotal = finalTotal;
-    }
-
     public String getDate() {
         return date;
     }
 
-    public TrasactionDetails(){
-
+    public void setDiscount(int discount) {
+        this.discount = discount;
     }
 
     public void setDate(String date) {
@@ -85,5 +72,21 @@ public class TrasactionDetails {
 
     public void setBillNumber(int billNumber) {
         this.billNumber = billNumber;
+    }
+
+
+    @Override
+    public String toString() {
+        return "TrasactionDetails{" +
+                "billNumber=" + billNumber +
+                ", finalTotal=" + finalTotal +
+                ", date='" + date + '\'' +
+                ", discountedTotal=" + discountedTotal +
+                ", discount=" + discount +
+                '}';
+    }
+
+    public int getDiscount() {
+        return discount;
     }
 }

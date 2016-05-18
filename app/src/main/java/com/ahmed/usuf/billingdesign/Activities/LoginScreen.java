@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.ahmed.usuf.billingdesign.R;
 import com.ahmed.usuf.billingdesign.Volley.AppController;
 import com.ahmed.usuf.billingdesign.utili.HttpClient;
+import com.ahmed.usuf.billingdesign.utili.SystemConfig;
 import com.google.common.base.Strings;
 
 public class LoginScreen extends AppCompatActivity {
@@ -100,7 +101,7 @@ public class LoginScreen extends AppCompatActivity {
 
                             if(response.contains("EPSON TMNet WebConfig Ver.1.00")){
                                 Log.i("PRINTER ** CONNECTED ********************", "IP ADDRESS *****  "+ ip);
-                                AppController.getInstance().setPrinterIpAddress(ip);
+                                SystemConfig.getInstance().setIp(ip);
                                 break;
                             }
                         }

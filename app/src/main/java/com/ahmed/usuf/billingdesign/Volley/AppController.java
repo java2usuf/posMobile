@@ -2,6 +2,7 @@ package com.ahmed.usuf.billingdesign.Volley;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.text.TextUtils;
@@ -15,6 +16,10 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 
 import net.danlew.android.joda.JodaTimeAndroid;
+
+import org.joda.time.LocalDateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import java.io.FileOutputStream;
 import java.io.FileWriter;
@@ -61,6 +66,24 @@ public class AppController extends Application {
         return editor;
     }
 
+    public String getLastDates(int days) {
+
+        DateTimeFormatter format = DateTimeFormat.forPattern("d/MM/yy");
+        LocalDateTime now = new LocalDateTime();
+        StringBuffer buffer=new StringBuffer();
+
+        if (days>0) {
+            for (int i = 1; i < days; i++) {
+                now.minusDays(i);
+                buffer.append(format.print(now)+"\n");
+            }
+        }else{
+            buffer.append(format.print(now));
+        }
+
+        return buffer.toString();
+    }
+
     public void setEditor(SharedPreferences.Editor editor) {
         this.editor = editor;
     }
@@ -105,7 +128,7 @@ public class AppController extends Application {
         mInstance = this;
     }
 
-    public static String getProperty(String key,Context context) throws IOException {
+    public String getProperty(String key,Context context) throws IOException {
         Properties properties = new Properties();;
         AssetManager assetManager = context.getAssets();
         InputStream inputStream = assetManager.open("app.properties");
@@ -116,6 +139,8 @@ public class AppController extends Application {
     public static synchronized AppController getInstance() {
         return mInstance;
     }
+
+
 
     public RequestQueue getRequestQueue() {
         if (mRequestQueue == null) {

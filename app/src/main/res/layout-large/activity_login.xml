@@ -1,0 +1,81 @@
+<LinearLayout
+
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_content" android:background="@drawable/blur3"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="fill_parent" android:layout_height="fill_parent"
+        >
+        <LinearLayout
+            android:layout_width="fill_parent" android:layout_gravity="center_vertical"
+            android:layout_height="fill_parent"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="10dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="25sp"
+                android:text="SRM Billing Application"
+                android:id="@+id/safire"
+                android:layout_gravity="center_horizontal"
+                android:typeface="serif"
+                android:textStyle="bold|italic"
+                android:textColor="#fdfffc0f"
+                />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="#50ffffff"
+                android:layout_marginTop="10dp">
+
+                <EditText
+                    android:textColorHint="@android:color/holo_red_light"
+                    android:id="@+id/username"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="UserName" />
+
+
+
+                <EditText
+                    android:textColorHint="@android:color/holo_red_light"
+                    android:id="@+id/password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberPassword"
+                    android:hint="PassWord" />
+
+                <requestFocus />
+
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/angry_btn"
+
+                android:text="Login"
+                android:textColor="#FFFFFF"
+                android:textSize="22sp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="30dp"
+                android:layout_width="209dp"
+                android:layout_height="43dp"
+                android:background="@drawable/btn_style"
+                android:shadowColor="#A83939"
+                android:shadowDx="0"
+                android:shadowDy="0"
+                android:shadowRadius="5"
+                android:onClick="login" />
+
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
