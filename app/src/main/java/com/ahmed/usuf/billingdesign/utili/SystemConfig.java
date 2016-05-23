@@ -10,9 +10,9 @@ import java.util.List;
  * Created by Ahmed-Mariam on 5/17/2016.
  */
 public class SystemConfig {
-    private String ip;
+    private String ip = "192.168.2.80";
     private int day;
-    static SystemConfig config;
+    static SystemConfig config= new SystemConfig( "192.168.2.8",""+7);
 
 
     public SystemConfig(String ip, String day) {

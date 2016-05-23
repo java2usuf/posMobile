@@ -47,7 +47,7 @@ public class AppController extends Application {
         this.printerIpAddress = printerIpAddress;
     }
 
-    private String printerIpAddress = "192.168.2.81";
+    private String printerIpAddress = "192.168.2.80";
     private List<LineItem> bag = new ArrayList<LineItem>();
 
 
