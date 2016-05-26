@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -66,7 +67,13 @@ public class AddItem extends Fragment implements fragmentLifeCycle {
         tot.setEnabled(false);
         billno = (EditText) v.findViewById(R.id.billno);
         billno.setEnabled(false);
-
+        final Button add=(Button)v.findViewById(R.id.angry_btn);
+        add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addToCart();
+            }
+        });
 
         prc.addTextChangedListener(new TextWatcher() {
             @Override
@@ -85,9 +92,8 @@ public class AddItem extends Fragment implements fragmentLifeCycle {
                     String buffer;
                     buffer = qty.getSelectedItem().toString();
                     String priceValue = prc.getText().toString();
-                    if(!Strings.isNullOrEmpty(priceValue)){
+                    if (!Strings.isNullOrEmpty(priceValue)) {
                         int calculatedAmount = Integer.parseInt(buffer) * Integer.parseInt(priceValue);
-                        Log.d("afterTextChanged : Total calculated amount ",""+ calculatedAmount);
                         tot.setText("" + calculatedAmount);
                     }
                 } catch (NumberFormatException e) {
@@ -96,33 +102,6 @@ public class AddItem extends Fragment implements fragmentLifeCycle {
                 }
             }
 
-        });
-
-        FloatingActionButton fab = (FloatingActionButton) v.findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                View focus = getActivity().getCurrentFocus();
-                if (focus != null) {
-                    hiddenKeyboard(focus);
-                }
-
-                if (prc.getText().toString().isEmpty()) {
-                    prc.setError("Please Enter Product price");
-                } else {
-                    prc.setError(null);
-                    Toast.makeText(AddItem.this.getActivity(), "Adding to the Cart", Toast.LENGTH_LONG).show();
-                    AppController.getInstance().getBag().add(new LineItem(qty.getSelectedItem().toString(), prc.getText().toString(), billno.getText().toString(), tot.getText().toString(), pName.getSelectedItem().toString()));
-                    ViewCart.mAdapter.swap(AppController.getInstance().getBag());
-                    qty.setSelection(0);
-                    pName.setSelection(0);
-                    prc.setText("");
-                    tot.setText("");
-
-                }
-
-            }
         });
 
         try {
@@ -180,6 +159,27 @@ public class AddItem extends Fragment implements fragmentLifeCycle {
             }
         });
         return v;
+    }
+
+    private void addToCart() {
+        View focus = getActivity().getCurrentFocus();
+        if (focus != null) {
+            hiddenKeyboard(focus);
+        }
+
+        if (prc.getText().toString().isEmpty()) {
+            prc.setError("Please Enter Product price");
+        } else {
+            prc.setError(null);
+            Toast.makeText(AddItem.this.getActivity(), "Adding to the Cart", Toast.LENGTH_LONG).show();
+            AppController.getInstance().getBag().add(new LineItem(qty.getSelectedItem().toString(), prc.getText().toString(), billno.getText().toString(), tot.getText().toString(), pName.getSelectedItem().toString()));
+            ViewCart.mAdapter.swap(AppController.getInstance().getBag());
+            qty.setSelection(0);
+            pName.setSelection(0);
+            prc.setText("");
+            tot.setText("");
+
+        }
     }
 
     private void hiddenKeyboard(View v) {

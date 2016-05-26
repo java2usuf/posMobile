@@ -1,5 +1,6 @@
 package com.ahmed.usuf.billingdesign.Fragments;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -9,12 +10,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ahmed.usuf.billingdesign.Activities.HomeScreen;
 import com.ahmed.usuf.billingdesign.Adapters.LineItem;
+import com.ahmed.usuf.billingdesign.Interfaces.BillCallBack;
+import com.ahmed.usuf.billingdesign.Interfaces.PercentageCallBack;
 import com.ahmed.usuf.billingdesign.Interfaces.fragmentLifeCycle;
 import com.ahmed.usuf.billingdesign.R;
 import com.ahmed.usuf.billingdesign.Adapters.RecycleViewAdapter;
@@ -34,10 +38,20 @@ public class ViewCart extends android.support.v4.app.Fragment implements Receive
     public static RecycleViewAdapter mAdapter;
     public java.util.List<LineItem> pDetails;
     TextView emptycart;
+    BillCallBack billCallBack;
+    PercentageCallBack percentageCallBack;
+
+    @Override
+    public void onAttach(Activity activity) {
+        percentageCallBack=(PercentageCallBack)activity;
+        billCallBack=(BillCallBack)activity;
+        super.onAttach(activity);
+    }
 
     public ViewCart(){
 
     }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -56,6 +70,21 @@ public class ViewCart extends android.support.v4.app.Fragment implements Receive
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);
 
+
+        final Button bill=(Button)view.findViewById(R.id.bill);
+        final Button discount=(Button)view.findViewById(R.id.discount);
+        discount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                percentageCallBack.calculatePercentage();
+            }
+        });
+        bill.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                billCallBack.printBill();
+            }
+        });
 
 
         return view;

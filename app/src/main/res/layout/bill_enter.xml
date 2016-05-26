@@ -111,18 +111,23 @@
 
 </ScrollView>
 
+        <Button
+            android:id="@+id/angry_btn"
+            android:text="Add"
+            android:onClick="add"
+            android:layout_marginTop="20dp"
+            android:textColor="#FFFFFF"
+            android:textSize="25sp"
+            android:layout_width="113dp"
+            android:layout_height="61dp"
+            android:background="@drawable/buttonshape"
+            android:layout_gravity="center_horizontal"
+            android:shadowColor="#A8A8A8"
+            android:shadowDx="1"
+            android:shadowDy="0"
+            android:shadowRadius="5"
+            />
     </LinearLayout>
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        app:fabSize="normal"
-        app:pressedTranslationZ="20dp"
-        android:backgroundTintMode="@android:color/holo_blue_light"
-        android:layout_margin="@dimen/fab_margin"
-        android:src="@android:drawable/ic_input_add"/>
-
 
 
 </android.support.design.widget.CoordinatorLayout>

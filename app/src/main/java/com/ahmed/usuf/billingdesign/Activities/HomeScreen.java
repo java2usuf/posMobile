@@ -30,6 +30,8 @@ import com.ahmed.usuf.billingdesign.DatabaseHandler.DatabaseHandler;
 import com.ahmed.usuf.billingdesign.Fragments.AddItem;
 import com.ahmed.usuf.billingdesign.Fragments.ViewCart;
 import com.ahmed.usuf.billingdesign.Adapters.LineItem;
+import com.ahmed.usuf.billingdesign.Interfaces.BillCallBack;
+import com.ahmed.usuf.billingdesign.Interfaces.PercentageCallBack;
 import com.ahmed.usuf.billingdesign.Interfaces.fragmentLifeCycle;
 import com.ahmed.usuf.billingdesign.R;
 import com.ahmed.usuf.billingdesign.Volley.AppController;
@@ -50,7 +52,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class HomeScreen extends AppCompatActivity implements ReceiveListener {
+public class HomeScreen extends AppCompatActivity implements ReceiveListener,BillCallBack,PercentageCallBack {
 
     EditText prc, tot;
     int totalCount;
@@ -82,30 +84,7 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
         prc = (EditText) findViewById(R.id.pricelabel);
         tot = (EditText) findViewById(R.id.totalLabel);
 
-        //Setting Margin Programmatically
-        FrameLayout.LayoutParams params=new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        params.setMargins(width / 4, 0, 0, 0);
 
-        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                HomeScreen.this.confirmPrint();
-            }
-        });
-
-        FloatingActionButton fab2 = (FloatingActionButton) findViewById(R.id.discount);
-        fab2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                discountDialog();
-            }
-        });
-
-        fab.setVisibility(View.GONE);
-        final FrameLayout frame = (FrameLayout) findViewById(R.id.frame);
-        frame.setVisibility(View.GONE);
 
         if (viewPager != null) {
             viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -142,8 +121,6 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
                 switch (tab.getPosition()) {
                     case 0:
                         tabLayout.setVisibility(View.VISIBLE);
-                        fab.setVisibility(View.GONE);
-                        frame.setVisibility(View.GONE);
                         focus = getCurrentFocus();
                         if (focus != null) {
                             hiddenKeyboard(focus);
@@ -151,8 +128,6 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
                         break;
                     case 1:
                         tabLayout.setVisibility(View.GONE);
-                        fab.setVisibility(View.VISIBLE);
-                        frame.setVisibility(View.VISIBLE);
                         focus = getCurrentFocus();
                         if (focus != null) {
                             hiddenKeyboard(focus);
@@ -608,6 +583,16 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
         }
 
         finalizeObject();
+    }
+
+    @Override
+    public void printBill() {
+        confirmPrint();
+    }
+
+    @Override
+    public void calculatePercentage() {
+        discountDialog();
     }
 
     static class Adapter extends FragmentPagerAdapter {
