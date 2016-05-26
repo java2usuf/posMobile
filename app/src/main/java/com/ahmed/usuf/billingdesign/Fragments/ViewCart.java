@@ -61,26 +61,6 @@ public class ViewCart extends android.support.v4.app.Fragment implements Receive
         return view;
     }
 
-    /*private void customDialog(){
-      *//*  // Created a new Dialog
-        Dialog dialog = new Dialog(MyActivity.this);
-
-// Set the title
-        dialog.setTitle("Dialog Title");
-
-// inflate the layout
-        dialog.setContentView(R.layout.dialog_view);
-
-// Set the dialog text -- this is better done in the XML
-        TextView text = (TextView)dialog.findViewById(R.id.dialog_text_view);
-        text.setText("This is the text that does in the dialog box");
-
-// Display the dialog
-        dialog.show();*//*
-    }*/
-
-
-
     @Override
     public void onResume() {
         super.onResume();
