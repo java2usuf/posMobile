@@ -9,4 +9,5 @@
         android:orderInCategory="100" app:showAsAction="never" />
     <item android:id="@+id/sales" android:title="Today's Sales"
         android:orderInCategory="100" app:showAsAction="never" />
+
 </menu>
