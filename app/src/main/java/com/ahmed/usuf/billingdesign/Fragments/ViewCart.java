@@ -63,7 +63,6 @@ public class ViewCart extends android.support.v4.app.Fragment implements Receive
 
     @Override
     public void onResume() {
-
         super.onResume();
 
         mAdapter.notifyDataSetChanged();

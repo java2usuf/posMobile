@@ -532,7 +532,6 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
         if (id==R.id.sales){
             getSalesReport();
         }
-
         if (id==R.id.clear){
             clearList();
             AppController.getInstance().setIsDiscountOn(false);
