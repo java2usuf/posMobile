@@ -603,7 +603,6 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
             runOnUiThread(new Runnable() {
                 @Override
                 public synchronized void run() {
-                    //ShowMsg.showException(e, "disconnect", mContext);
                 }
             });
         }
