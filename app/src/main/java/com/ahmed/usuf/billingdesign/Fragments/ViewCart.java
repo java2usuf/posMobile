@@ -9,9 +9,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ahmed.usuf.billingdesign.Activities.HomeScreen;
 import com.ahmed.usuf.billingdesign.Adapters.LineItem;
 import com.ahmed.usuf.billingdesign.Interfaces.fragmentLifeCycle;
 import com.ahmed.usuf.billingdesign.R;
@@ -82,6 +84,7 @@ public class ViewCart extends android.support.v4.app.Fragment implements Receive
     @Override
     public void onResume() {
         super.onResume();
+
         mAdapter.notifyDataSetChanged();
         emptycart=(TextView)getActivity().findViewById(R.id.empty);
     }

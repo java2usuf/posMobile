@@ -14,7 +14,7 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<LinearLayout
+<RelativeLayout
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -25,6 +25,8 @@
         android:layout_height="wrap_content"
         android:text="Empty Cart"
         android:textSize="80dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
         android:layout_marginTop="380dp"
         android:gravity="center"
         android:id="@+id/empty"
@@ -33,4 +35,4 @@
     android:id="@+id/recyclerview"
     android:layout_width="match_parent"
     android:layout_height="wrap_content" />
-  </LinearLayout>
+  </RelativeLayout>

@@ -36,6 +36,7 @@ public class DateHistoryAdapter extends RecyclerView.Adapter<DateHistoryAdapter.
     public DateHistoryAdapter(ArrayList<String> set,Context context){
         this.set=set;
         db=new DatabaseHandler(context);
+
     }
 
     public class DateHistoryHolder extends RecyclerView.ViewHolder {

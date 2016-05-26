@@ -19,6 +19,7 @@ import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -81,46 +82,16 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
         prc = (EditText) findViewById(R.id.pricelabel);
         tot = (EditText) findViewById(R.id.totalLabel);
 
+        //Setting Margin Programmatically
+        FrameLayout.LayoutParams params=new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.setMargins(width / 4, 0, 0, 0);
 
         final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                confirmPrint();
-            }
-        });
-
-        FloatingActionButton clearfab = (FloatingActionButton) findViewById(R.id.clearbutton);
-        clearfab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                clearList();
-                AppController.getInstance().setIsDiscountOn(false);
-                viewPager.setCurrentItem(0);
-            }
-        });
-
-        FloatingActionButton server = (FloatingActionButton) findViewById(R.id.server);
-        server.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //ServerCodegoesHere
-                LocalDateTime localDateTime = new LocalDateTime();
-                DateTimeFormatter fmt;
-                fmt = DateTimeFormat.forPattern("d/MM/yy");
-                String str = localDateTime.toString(fmt);
-                List<TrasactionDetails> trasactionDetailsList=db.getAllTransantions();
-                int billableAmount=0,discountAmount=0;
-
-                Log.d("DatabaseChecking","TxnList: "+db.getAllTransantions().toString());
-
-                for (TrasactionDetails details:trasactionDetailsList){
-                    if (details.getDate().contains(str)){
-                        billableAmount+=details.getFinalTotal();
-                        discountAmount+=details.getDiscount();
-                    }
-                }
-                Toast.makeText(HomeScreen.this,"2354134652-"+billableAmount+"%%7658486543-"+discountAmount,Toast.LENGTH_LONG).show();
+                HomeScreen.this.confirmPrint();
             }
         });
 
@@ -134,11 +105,7 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
 
         fab.setVisibility(View.GONE);
         final FrameLayout frame = (FrameLayout) findViewById(R.id.frame);
-        final FrameLayout frameserver = (FrameLayout) findViewById(R.id.frameserver);
-        final FrameLayout frameClear = (FrameLayout) findViewById(R.id.frameclear);
         frame.setVisibility(View.GONE);
-        frameserver.setVisibility(View.GONE);
-        frameClear.setVisibility(View.GONE);
 
         if (viewPager != null) {
             viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -177,8 +144,6 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
                         tabLayout.setVisibility(View.VISIBLE);
                         fab.setVisibility(View.GONE);
                         frame.setVisibility(View.GONE);
-                        frameserver.setVisibility(View.GONE);
-                        frameClear.setVisibility(View.GONE);
                         focus = getCurrentFocus();
                         if (focus != null) {
                             hiddenKeyboard(focus);
@@ -188,8 +153,6 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
                         tabLayout.setVisibility(View.GONE);
                         fab.setVisibility(View.VISIBLE);
                         frame.setVisibility(View.VISIBLE);
-                        frameClear.setVisibility(View.VISIBLE);
-                        frameserver.setVisibility(View.VISIBLE);
                         focus = getCurrentFocus();
                         if (focus != null) {
                             hiddenKeyboard(focus);
@@ -206,14 +169,36 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
             public void onTabReselected(TabLayout.Tab tab) {
             }
         });
+        display();
+    }
+
+    private void getSalesReport() {
+        //ServerCodegoesHere
+        LocalDateTime localDateTime = new LocalDateTime();
+        DateTimeFormatter fmt;
+        fmt = DateTimeFormat.forPattern("d/MM/yy");
+        String str = localDateTime.toString(fmt);
+        List<TrasactionDetails> trasactionDetailsList = db.getAllTransantions();
+        int billableAmount = 0, discountAmount = 0;
+
+        Log.d("DatabaseChecking", "TxnList: " + db.getAllTransantions().toString());
+
+        for (TrasactionDetails details : trasactionDetailsList) {
+            if (details.getDate().contains(str)) {
+                billableAmount += details.getFinalTotal();
+                discountAmount += details.getDiscount();
+            }
+        }
+        Toast.makeText(HomeScreen.this, "2354134652-" + billableAmount + "%%7658486543-" + discountAmount, Toast.LENGTH_LONG).show();
+    }
+
+    private void display() {
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
         width = size.x;
         height = size.y;
     }
-
-
 
     public static String rupeeFormat(String value){
         value=value.replace(",","");
@@ -233,7 +218,6 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
         }
         return (result+lastDigit);
     }
-
 
     private void clearList() {
         AppController.getInstance().getBag().clear();
@@ -543,6 +527,16 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener {
             startActivity(DateHistoryScreen.class);
             finish();
             return true;
+        }
+
+        if (id==R.id.sales){
+            getSalesReport();
+        }
+
+        if (id==R.id.clear){
+            clearList();
+            AppController.getInstance().setIsDiscountOn(false);
+            viewPager.setCurrentItem(0);
         }
 
         return super.onOptionsItemSelected(item);

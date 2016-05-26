@@ -33,6 +33,5 @@ dependencies {
     compile 'com.google.guava:guava:19.0'
     compile 'com.mcxiaoke.volley:library-aar:1.0.0'
     compile 'net.danlew:android.joda:2.9.3'
-
     compile files('libs/ePOS2.jar')
 }
