@@ -1,4 +1,4 @@
-package com.ahmed.usuf.billingdesign.Adapters;
+package com.ahmed.usuf.billingdesign.data;
 
 /**
  * Created by Ahmed-Mariam on 3/30/2016.

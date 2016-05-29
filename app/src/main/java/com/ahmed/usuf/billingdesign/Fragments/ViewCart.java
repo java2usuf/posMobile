@@ -11,22 +11,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ahmed.usuf.billingdesign.Activities.HomeScreen;
-import com.ahmed.usuf.billingdesign.Adapters.LineItem;
+import com.ahmed.usuf.billingdesign.data.LineItem;
 import com.ahmed.usuf.billingdesign.Interfaces.BillCallBack;
 import com.ahmed.usuf.billingdesign.Interfaces.PercentageCallBack;
 import com.ahmed.usuf.billingdesign.Interfaces.fragmentLifeCycle;
 import com.ahmed.usuf.billingdesign.R;
 import com.ahmed.usuf.billingdesign.Adapters.RecycleViewAdapter;
-import com.ahmed.usuf.billingdesign.Volley.AppController;
+import com.ahmed.usuf.billingdesign.singleton.AppController;
 import com.epson.epos2.printer.Printer;
 import com.epson.epos2.printer.PrinterStatusInfo;
 import com.epson.epos2.printer.ReceiveListener;
-import com.google.common.base.Strings;
 
 /**
  * Created by Ahmed-Mariam on 3/30/2016.
@@ -59,9 +56,6 @@ public class ViewCart extends android.support.v4.app.Fragment implements Receive
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview);
 
         emptycart=(TextView)view.findViewById(R.id.empty);
-
-
-
         recyclerView.setHasFixedSize(true);
         mAdapter=new RecycleViewAdapter(pDetails);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
@@ -69,7 +63,6 @@ public class ViewCart extends android.support.v4.app.Fragment implements Receive
         recyclerView.setLayoutManager(llm);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);
-
 
         final Button bill=(Button)view.findViewById(R.id.bill);
         final Button discount=(Button)view.findViewById(R.id.discount);
@@ -93,7 +86,6 @@ public class ViewCart extends android.support.v4.app.Fragment implements Receive
     @Override
     public void onResume() {
         super.onResume();
-
         mAdapter.notifyDataSetChanged();
         emptycart=(TextView)getActivity().findViewById(R.id.empty);
     }
@@ -118,6 +110,7 @@ public class ViewCart extends android.support.v4.app.Fragment implements Receive
                 emptycart.setVisibility(View.GONE);
             }else {
                 emptycart.setVisibility(View.VISIBLE);
+                emptycart.setTextSize(HomeScreen.width/1);
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -2,10 +2,7 @@ package com.ahmed.usuf.billingdesign.Fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatSpinner;
 import android.text.Editable;
@@ -22,19 +19,16 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 
-import com.ahmed.usuf.billingdesign.Activities.HomeScreen;
-import com.ahmed.usuf.billingdesign.Adapters.LineItem;
+import com.ahmed.usuf.billingdesign.data.LineItem;
 import com.ahmed.usuf.billingdesign.Interfaces.fragmentLifeCycle;
 import com.ahmed.usuf.billingdesign.R;
-import com.ahmed.usuf.billingdesign.Adapters.RecycleViewAdapter;
-import com.ahmed.usuf.billingdesign.Volley.AppController;
+import com.ahmed.usuf.billingdesign.singleton.AppController;
 import com.google.common.base.Strings;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -225,7 +219,6 @@ public class AddItem extends Fragment implements fragmentLifeCycle {
     public void onResume() {
         super.onResume();
         if (AppController.getInstance().getSharedpreferences().contains("billno")) {
-            Toast.makeText(getActivity(), "Insidebillno Contains", Toast.LENGTH_SHORT).show();
             billno.setText(Strings.padStart("" + AppController.getInstance().getSharedpreferences().getInt("billno", 0), 5, '0'));
             AppController.getInstance().getTxnDetails().setBillNumber(AppController.getInstance().getSharedpreferences().getInt("billno", 0));
         }

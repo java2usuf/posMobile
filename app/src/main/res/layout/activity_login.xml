@@ -52,7 +52,6 @@
                     android:layout_height="wrap_content"
                     android:inputType="numberPassword"
                     android:hint="PassWord" />
-
                 <requestFocus />
 
 

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Point;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -16,25 +15,25 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.ahmed.usuf.billingdesign.utili.AppConstants;
 import com.ahmed.usuf.billingdesign.DatabaseHandler.DatabaseHandler;
 import com.ahmed.usuf.billingdesign.Fragments.AddItem;
 import com.ahmed.usuf.billingdesign.Fragments.ViewCart;
-import com.ahmed.usuf.billingdesign.Adapters.LineItem;
+import com.ahmed.usuf.billingdesign.data.LineItem;
 import com.ahmed.usuf.billingdesign.Interfaces.BillCallBack;
 import com.ahmed.usuf.billingdesign.Interfaces.PercentageCallBack;
 import com.ahmed.usuf.billingdesign.Interfaces.fragmentLifeCycle;
 import com.ahmed.usuf.billingdesign.R;
-import com.ahmed.usuf.billingdesign.Volley.AppController;
+import com.ahmed.usuf.billingdesign.singleton.AppController;
 import com.ahmed.usuf.billingdesign.data.TrasactionDetails;
 import com.ahmed.usuf.billingdesign.utili.SystemConfig;
 import com.epson.epos2.Epos2Exception;
@@ -72,9 +71,6 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener,Bil
         setContentView(R.layout.activity_main);
 
         db=new DatabaseHandler(this);
-
-        Log.d("DB",db.getTransactionOn("16/05/16").toString());
-
         viewPager = (ViewPager) findViewById(R.id.viewpager);
 
         if (viewPager != null) {
@@ -83,8 +79,6 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener,Bil
 
         prc = (EditText) findViewById(R.id.pricelabel);
         tot = (EditText) findViewById(R.id.totalLabel);
-
-
 
         if (viewPager != null) {
             viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -116,7 +110,6 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener,Bil
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                //viewPager.setCurrentItem(tab.getPosition());//setting current selected item over viewpager
                 View focus;
                 switch (tab.getPosition()) {
                     case 0:
@@ -148,16 +141,12 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener,Bil
     }
 
     private void getSalesReport() {
-        //ServerCodegoesHere
         LocalDateTime localDateTime = new LocalDateTime();
         DateTimeFormatter fmt;
         fmt = DateTimeFormat.forPattern("d/MM/yy");
         String str = localDateTime.toString(fmt);
         List<TrasactionDetails> trasactionDetailsList = db.getAllTransantions();
         int billableAmount = 0, discountAmount = 0;
-
-        Log.d("DatabaseChecking", "TxnList: " + db.getAllTransantions().toString());
-
         for (TrasactionDetails details : trasactionDetailsList) {
             if (details.getDate().contains(str)) {
                 billableAmount += details.getFinalTotal();
@@ -209,8 +198,13 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener,Bil
         final Button save;
 
         day=(EditText)dialog.findViewById(R.id.day);
+        day.setText(""+SystemConfig.getInstance().getDay());
+        day.setGravity(Gravity.CENTER);
+
         ip=(EditText)dialog.findViewById(R.id.ip);
+        ip.setText(SystemConfig.getInstance().getIp());
         save=(Button)dialog.findViewById(R.id.save);
+
 
         save.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -219,13 +213,28 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener,Bil
                 String date1 = day.getText().toString();
                 String ip1 = ip.getText().toString();
 
+                AppController.getInstance().getEditor().
+                        putString(AppConstants.PRINTER_IP, ip1);
+                AppController.getInstance().getEditor().
+                        putString(AppConstants.Number_of_Days, date1);
+                AppController.getInstance().getEditor().commit();
+
+                SystemConfig.getInstance().setIp(AppController.getInstance().getSharedpreferences().getString(AppConstants.PRINTER_IP, null));
+                SystemConfig.getInstance().setDay(AppController.getInstance().getSharedpreferences().getString(AppConstants.Number_of_Days, null));
+
                 if (date1.length() > 0 && ip1.length() > 0) {
                     SystemConfig.getInstance().setDay(date1);
                     SystemConfig.getInstance().setIp(ip1);
+                    dialog.dismiss();
                 } else if (date1.length() > 0) {
                     SystemConfig.getInstance().setDay(date1);
+                    dialog.dismiss();
                 } else if (ip1.length() > 0) {
                     SystemConfig.getInstance().setIp(ip1);
+                    dialog.dismiss();
+                }else{
+                    Toast.makeText(getApplicationContext(),"No Changes",Toast.LENGTH_LONG).show();
+                    dialog.dismiss();
                 }
             }
         });
@@ -237,7 +246,7 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener,Bil
         // custom dialog
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.discount);
-        dialog.setTitle("Enter Percentage or Price to Discount");
+        dialog.setTitle(AppConstants.MSG_PERCENTAGE_DIALOG);
         final EditText price, percentage;
         price = (EditText) dialog.findViewById(R.id.pricediscount);
         percentage = (EditText) dialog.findViewById(R.id.percentage);
@@ -321,9 +330,22 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener,Bil
         ad.show();
     }
 
+    class AsyncTask extends android.os.AsyncTask<String ,Void, String> {
+        @Override
+        protected String doInBackground(String... params) {
+            printLogic();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            billNoIncrementing();
+        }
+    }
+
     private void confirmPrint() {
         Context context = this;
-        String title = "MenCity";
+        String title = "MensCity";
         String message = "Really want to Print";
         String button1String = "Yes";
         String button2String = "No";
@@ -335,126 +357,7 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener,Bil
                 button1String,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
-
-                        Intent intent = null;
-                        try {
-                            mPrinter = new Printer(Printer.TM_T82,
-                                    Printer.MODEL_CHINESE,
-                                    HomeScreen.this);
-
-                            mPrinter.setReceiveEventListener(HomeScreen.this);
-                            String printerkey="printer.design.";
-                            mPrinter.addTextSize(4, 2);
-                            mPrinter.addTextAlign(Printer.ALIGN_CENTER);
-                            mPrinter.addText(AppController.getInstance().getProperty(printerkey + "shopname", getApplicationContext()));
-                            mPrinter.addFeedLine(2);
-
-                            mPrinter.addTextSize(1, 1);
-                            mPrinter.addText(AppController.getInstance().getProperty(printerkey + "location", getApplicationContext()));
-                            mPrinter.addFeedLine(1);
-
-                            mPrinter.addTextSize(2, 1);
-                            mPrinter.addTextAlign(Printer.ALIGN_CENTER);
-                            mPrinter.addText("Phone: " + AppController.getInstance().getProperty(printerkey + "mobile", getApplicationContext())); ;
-                            mPrinter.addFeedLine(2);
-
-                            mPrinter.addTextAlign(Printer.ALIGN_LEFT);
-                            mPrinter.addTextSize(1, 1);
-                            mPrinter.addText(AppController.getInstance().getProperty(printerkey + "tin", getApplicationContext()));
-                            mPrinter.addText("\t");
-
-                            mPrinter.addTextAlign(Printer.ALIGN_RIGHT);
-                            LocalDateTime localDateTime = new LocalDateTime();
-                            DateTimeFormatter fmt = DateTimeFormat.forPattern("d/MM/yy hh:mm a");
-                            String str = localDateTime.toString(fmt);
-                            mPrinter.addText(str);
-                            mPrinter.addFeedLine(1);
-
-
-                            mPrinter.addText("Bill No : " + Strings.padStart("" + AppController.getInstance().getSharedpreferences().getInt("billno", 0), 5, '0'));
-                            mPrinter.addFeedLine(1);
-                            mPrinter.addTextAlign(Printer.ALIGN_LEFT);
-                            mPrinter.addText("------------------------------------------------\n");
-                            mPrinter.addText("No\tItem\t\tPrice\tQty\t Total\n");
-                            mPrinter.addText("------------------------------------------------\n");
-
-                            StringBuffer sb = new StringBuffer("");
-                            if (AppController.getInstance().getBag().size() > 0) {
-                                int itemNo=0,qtyCount=0;
-                                for(LineItem lineItem:AppController.getInstance().getBag()){
-                                    String temp=String.format("%2s", ++itemNo +"\t")+
-                                            String.format("%-10s", lineItem.getProductName())+"\t"+String.format("%4s", lineItem.getPrice())+"\t"+
-                                    String.format("%3s", lineItem.getQty()+"\t"+ String.format("%8s", lineItem.getTotal() +"\n"));
-                                    sb.append(temp);
-                                    qtyCount+=Integer.parseInt(lineItem.getQty());
-                                }
-
-                                mPrinter.addText(sb.toString());
-                                mPrinter.addText("------------------------------------------------\n");
-                                //mPrinter.addTextAlign(Printer.ALIGN_LEFT);
-
-                                ///////////////////////////////////////////
-                                String temp=String.format("%2s","\t")+
-                                        String.format("%-10s", "")+"\t"+String.format("%4s", "\t")+String.format("%3s",qtyCount+ "\t")+ String.format("%8s", AppController.getInstance().getTotal() +  "\n");
-                                ///////////////////////////////////////////
-
-                                mPrinter.addText(temp);
-
-                                mPrinter.addText("------------------------------------------------\n");
-                                if(AppController.getInstance().isDiscountOn()){
-                                    mPrinter.addTextAlign(Printer.ALIGN_RIGHT);
-
-                                    mPrinter.addText("Discount : "+"-"+HomeScreen.reducedAmount);
-                                    mPrinter.addFeedLine(1);
-                                    mPrinter.addTextAlign(Printer.ALIGN_CENTER);
-                                    mPrinter.addTextSize(1,2);
-                                    mPrinter.addText("------------------------------------------------\n\n\n");
-                                    mPrinter.addTextSize(3, 3);
-                                    mPrinter.addText("Total : ");
-                                    mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.FALSE, Printer.TRUE);
-                                    mPrinter.addText(HomeScreen.discountTotal + "/-");
-                                }else{
-                                    mPrinter.addText("\n\n");
-                                    mPrinter.addTextAlign(Printer.ALIGN_CENTER);
-                                    mPrinter.addTextSize(3, 3);
-                                    mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.FALSE, Printer.FALSE);
-                                    mPrinter.addText("Total : ");
-                                    mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.FALSE, Printer.TRUE);
-                                    mPrinter.addText(AppController.getInstance().getTotal() + "/-");
-                                    mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.FALSE, Printer.FALSE);
-                                }
-                                mPrinter.addText("\n\n");
-                                mPrinter.addFeedLine(1);
-                            }
-
-                            mPrinter.addCut(Printer.PARAM_DEFAULT);
-
-                            //mPrinter.connect("TCP:" + AppController.getInstance().getPrinterIpAddress(), Printer.PARAM_DEFAULT);
-                            mPrinter.connect("TCP:" + SystemConfig.getInstance().getIp(), Printer.PARAM_DEFAULT);
-                            mPrinter.beginTransaction();
-                            mPrinter.sendData(Printer.PARAM_DEFAULT);
-                        } catch (Epos2Exception e) {
-                            e.printStackTrace();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-
-                        Log.d("DB Before", "" + db.getTxnCount());
-
-                        if(AppController.getInstance().isDiscountOn()) {
-                            db.addTransaction(new TrasactionDetails(HomeScreen.discountTotal, HomeScreen.reducedAmount));
-                        }else{
-                            db.addTransaction(new TrasactionDetails(AppController.getInstance().getTotal(), 0));
-                        }
-                        Log.d("DB Before", "" + db.getTxnCount());
-
-                        AppController.getInstance().getEditor().
-                                putInt("billno", ((int) AppController.getInstance().getSharedpreferences().getInt("billno", 0) + 1));
-                        AppController.getInstance().getEditor().commit();
-                        AppController.getInstance().setIsDiscountOn(false);
-                        clearList();
-                        viewPager.setCurrentItem(0, true);
-
+                        new AsyncTask().execute();
                     }
                 }
         );
@@ -473,6 +376,122 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener,Bil
         ad.show();
     }
 
+    private void billNoIncrementing() {
+        if(AppController.getInstance().isDiscountOn()) {
+            db.addTransaction(new TrasactionDetails(HomeScreen.discountTotal, HomeScreen.reducedAmount));
+        }else{
+            db.addTransaction(new TrasactionDetails(AppController.getInstance().getTotal(), 0));
+        }
+        AppController.getInstance().getEditor().
+                putInt("billno", ((int) AppController.getInstance().getSharedpreferences().getInt("billno", 0) + 1));
+        AppController.getInstance().getEditor().commit();
+        AppController.getInstance().setIsDiscountOn(false);
+        clearList();
+        viewPager.setCurrentItem(0, true);
+    }
+
+    private void printLogic() {
+        Intent intent = null;
+        try {
+            mPrinter = new Printer(Printer.TM_T82,
+                    Printer.MODEL_CHINESE,
+                    HomeScreen.this);
+
+            mPrinter.setReceiveEventListener(HomeScreen.this);
+            String printerkey="printer.design.";
+            mPrinter.addTextSize(4, 2);
+            mPrinter.addTextAlign(Printer.ALIGN_CENTER);
+            mPrinter.addText(AppController.getInstance().getProperty(printerkey + "shopname", getApplicationContext()));
+            mPrinter.addFeedLine(2);
+
+            mPrinter.addTextSize(1, 1);
+            mPrinter.addText(AppController.getInstance().getProperty(printerkey + "location", getApplicationContext()));
+            mPrinter.addFeedLine(1);
+
+            mPrinter.addTextSize(2, 1);
+            mPrinter.addTextAlign(Printer.ALIGN_CENTER);
+            mPrinter.addText("Phone: " + AppController.getInstance().getProperty(printerkey + "mobile", getApplicationContext())); ;
+            mPrinter.addFeedLine(2);
+
+            mPrinter.addTextAlign(Printer.ALIGN_LEFT);
+            mPrinter.addTextSize(1, 1);
+            mPrinter.addText(AppController.getInstance().getProperty(printerkey + "tin", getApplicationContext()));
+            mPrinter.addText("\t");
+
+            mPrinter.addTextAlign(Printer.ALIGN_RIGHT);
+            LocalDateTime localDateTime = new LocalDateTime();
+            DateTimeFormatter fmt = DateTimeFormat.forPattern("d/MM/yy hh:mm a");
+            String str = localDateTime.toString(fmt);
+            mPrinter.addText(str);
+            mPrinter.addFeedLine(1);
+
+
+            mPrinter.addText("Bill No : " + Strings.padStart("" + AppController.getInstance().getSharedpreferences().getInt("billno", 0), 5, '0'));
+            mPrinter.addFeedLine(1);
+            mPrinter.addTextAlign(Printer.ALIGN_LEFT);
+            mPrinter.addText(AppConstants.PRINTER_LINE_FEED);
+            mPrinter.addText("No\tItem\t\tPrice\tQty\t Total\n");
+            mPrinter.addText(AppConstants.PRINTER_LINE_FEED);
+
+            StringBuffer sb = new StringBuffer("");
+            if (AppController.getInstance().getBag().size() > 0) {
+                int itemNo=0,qtyCount=0;
+                for(LineItem lineItem:AppController.getInstance().getBag()){
+                    String temp=String.format("%2s", ++itemNo +"\t")+
+                            String.format("%-10s", lineItem.getProductName())+"\t"+String.format("%4s", lineItem.getPrice())+"\t"+
+                    String.format("%3s", lineItem.getQty()+"\t"+ String.format("%8s", lineItem.getTotal() +"\n"));
+                    sb.append(temp);
+                    qtyCount+=Integer.parseInt(lineItem.getQty());
+                }
+
+                mPrinter.addText(sb.toString());
+                mPrinter.addText(AppConstants.PRINTER_LINE_FEED);
+
+                String temp=String.format("%2s","\t")+
+                        String.format("%-10s", "")+"\t"+String.format("%4s", "\t")+String.format("%3s",qtyCount+ "\t")+ String.format("%8s", AppController.getInstance().getTotal() +  "\n");
+
+                mPrinter.addText(temp);
+
+                mPrinter.addText(AppConstants.PRINTER_LINE_FEED);
+                if(AppController.getInstance().isDiscountOn()){
+                    mPrinter.addTextAlign(Printer.ALIGN_RIGHT);
+
+                    mPrinter.addText("Discount : "+"-"+HomeScreen.reducedAmount);
+                    mPrinter.addFeedLine(1);
+                    mPrinter.addTextAlign(Printer.ALIGN_CENTER);
+                    mPrinter.addTextSize(1,2);
+                    mPrinter.addText("------------------------------------------------\n\n\n");
+                    mPrinter.addTextSize(3, 3);
+                    mPrinter.addText("Total : ");
+                    mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.FALSE, Printer.TRUE);
+                    mPrinter.addText(HomeScreen.discountTotal + "/-");
+                }else{
+                    mPrinter.addText("\n\n");
+                    mPrinter.addTextAlign(Printer.ALIGN_CENTER);
+                    mPrinter.addTextSize(3, 3);
+                    mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.FALSE, Printer.FALSE);
+                    mPrinter.addText("Total : ");
+                    mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.FALSE, Printer.TRUE);
+                    mPrinter.addText(AppController.getInstance().getTotal() + "/-");
+                    mPrinter.addTextStyle(Printer.FALSE, Printer.FALSE, Printer.FALSE, Printer.FALSE);
+                }
+                mPrinter.addText("\n\n");
+                mPrinter.addFeedLine(1);
+
+            }
+
+            mPrinter.addCut(Printer.PARAM_DEFAULT);
+
+            mPrinter.connect("TCP:" + SystemConfig.getInstance().getIp(), Printer.PARAM_DEFAULT);
+            mPrinter.beginTransaction();
+            mPrinter.sendData(Printer.PARAM_DEFAULT);
+        } catch (Epos2Exception e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void hiddenKeyboard(View v) {
         InputMethodManager keyboard = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         keyboard.hideSoftInputFromWindow(v.getWindowToken(), 0);
@@ -480,19 +499,14 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener,Bil
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             setConfig();
             return true;
@@ -500,7 +514,6 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener,Bil
 
         if (id == R.id.report) {
             startActivity(DateHistoryScreen.class);
-            finish();
             return true;
         }
 
@@ -634,5 +647,11 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener,Bil
     @Override
     public void onBackPressed() {
         confirmExit();
+    }
+
+    @Override
+    protected void onResume() {
+        AppController.getInstance().onActivityResumed(this);
+        super.onResume();
     }
 }

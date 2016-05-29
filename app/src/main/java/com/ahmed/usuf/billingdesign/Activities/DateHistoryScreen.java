@@ -13,28 +13,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.Toast;
 
-import com.ahmed.usuf.billingdesign.Adapters.ConfigListAdapter;
 import com.ahmed.usuf.billingdesign.Adapters.DateHistoryAdapter;
 import com.ahmed.usuf.billingdesign.DatabaseHandler.DatabaseHandler;
 import com.ahmed.usuf.billingdesign.R;
-import com.ahmed.usuf.billingdesign.Volley.AppController;
 import com.ahmed.usuf.billingdesign.data.TrasactionDetails;
-import com.ahmed.usuf.billingdesign.utili.SystemConfig;
-
-import org.joda.time.DateTime;
-import org.joda.time.LocalDateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 
 public class DateHistoryScreen extends ActionBarActivity {
 
@@ -167,5 +155,8 @@ public class DateHistoryScreen extends ActionBarActivity {
         }
     }
 
-
+    @Override
+    public void onBackPressed() {
+        this.finish();
+    }
 }

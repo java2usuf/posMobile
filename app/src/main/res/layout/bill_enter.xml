@@ -36,7 +36,7 @@
                     android:singleLine="true"
                     android:textAllCaps="true"
                     android:textSize="30dp"
-                    android:hint="normal NUMBER"
+                    android:hint="Bill Number"
                     android:textColorHint="@color/colorPrimary"
                     android:gravity="center"
                     />

@@ -3,18 +3,18 @@ package com.ahmed.usuf.billingdesign.Adapters;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.ahmed.usuf.billingdesign.Activities.HomeScreen;
-import com.ahmed.usuf.billingdesign.Fragments.AddItem;
 import com.ahmed.usuf.billingdesign.R;
-import com.ahmed.usuf.billingdesign.Volley.AppController;
+import com.ahmed.usuf.billingdesign.singleton.AppController;
+import com.ahmed.usuf.billingdesign.data.LineItem;
 import com.google.common.base.Strings;
 
 import java.util.List;
@@ -29,9 +29,21 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView itemName, priceView, qtyView, totalView;
+        public ImageButton remove;
 
         public MyViewHolder(View view) {
             super(view);
+            remove=(ImageButton)view.findViewById(R.id.remove);
+            remove.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    System.out.println("Position: " + getAdapterPosition());
+                    if(getAdapterPosition() !=0){
+                        delete(getAdapterPosition()-1);
+                    }
+
+                }
+            });
             itemName = (TextView) view.findViewById(R.id.productTitle);
             qtyView = (TextView) view.findViewById(R.id.qtyview);
             priceView = (TextView) view.findViewById(R.id.priceview);
@@ -62,19 +74,18 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         holder.itemName.setGravity(Gravity.CENTER);
         holder.priceView.setVisibility(View.VISIBLE);
         holder.qtyView.setVisibility(View.VISIBLE);
-        holder.itemName.setWidth(HomeScreen.width / 5);
-        holder.qtyView.setWidth(HomeScreen.width / 3);
-        holder.priceView.setWidth(HomeScreen.width / 2);
-        holder.totalView.setWidth(HomeScreen.width / 2);
-        holder.totalView.setGravity(Gravity.RIGHT);
-        holder.priceView.setGravity(Gravity.RIGHT);
-        holder.qtyView.setGravity(Gravity.RIGHT);
-        holder.itemName.setTextSize(30);
-        holder.qtyView.setTextSize(30);
-        holder.priceView.setTextSize(30);
-        holder.totalView.setTextSize(30);
-
-
+        holder.itemName.setWidth(HomeScreen.width / 3);
+        holder.qtyView.setWidth(HomeScreen.width / 5);
+        holder.priceView.setWidth(HomeScreen.width / 5);
+        holder.totalView.setWidth(HomeScreen.width / 5);
+        holder.totalView.setGravity(Gravity.CENTER);
+        holder.priceView.setGravity(Gravity.CENTER);
+        holder.qtyView.setGravity(Gravity.CENTER);
+        holder.remove.setVisibility(View.GONE);
+        holder.itemName.setTextSize(HomeScreen.width / 50);
+        holder.qtyView.setTextSize(HomeScreen.width / 50);
+        holder.priceView.setTextSize(HomeScreen.width / 50);
+        holder.totalView.setTextSize(HomeScreen.width / 50);
 
         if (position == 0) {
             settingHeaderValue(holder);
@@ -109,7 +120,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
             holder.totalView.setGravity(Gravity.RIGHT);
             holder.totalView.setTextSize(25);
 
-            holder.totalView.setText("SubTotal : " + Strings.padStart("" + AppController.getInstance().getTotal(), 30,' '));
+            holder.totalView.setText("SubTotal : " + Strings.padStart("" + AppController.getInstance().getTotal(), 30, ' '));
             return;
         }
 
@@ -149,6 +160,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         holder.priceView.setText(details.getPrice());
         holder.qtyView.setText(details.getQty());
         holder.totalView.setText(details.getTotal());
+        holder.remove.setVisibility(View.VISIBLE);
 
         holder.priceView.setTypeface(Typeface.SERIF, Typeface.BOLD);
         holder.qtyView.setTypeface(Typeface.SERIF, Typeface.BOLD);
@@ -165,6 +177,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         holder.priceView.setTypeface(Typeface.SERIF, Typeface.BOLD);
         holder.qtyView.setTypeface(Typeface.SERIF, Typeface.BOLD);
         holder.totalView.setTypeface(Typeface.SERIF, Typeface.BOLD);
+        holder.remove.setVisibility(View.VISIBLE);
 
         holder.itemName.setText("ITEM");
         holder.priceView.setText("PRICE");
@@ -179,6 +192,11 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 
     public void swap(List<LineItem> list) {
         itemList = list;
+        notifyDataSetChanged();
+    }
+
+    public void delete(int position){
+        itemList.remove(position);
         notifyDataSetChanged();
     }
 

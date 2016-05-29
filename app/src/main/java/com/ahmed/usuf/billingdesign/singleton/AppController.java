@@ -1,19 +1,21 @@
-package com.ahmed.usuf.billingdesign.Volley;
+package com.ahmed.usuf.billingdesign.singleton;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
+import android.os.Bundle;
 import android.text.TextUtils;
 
-import com.ahmed.usuf.billingdesign.Adapters.LineItem;
-import com.ahmed.usuf.billingdesign.R;
+import com.ahmed.usuf.billingdesign.data.LineItem;
+import com.ahmed.usuf.billingdesign.utili.AppConstants;
 import com.ahmed.usuf.billingdesign.data.TrasactionDetails;
+import com.ahmed.usuf.billingdesign.utili.SystemConfig;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
+import com.google.common.base.Strings;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
@@ -21,39 +23,30 @@ import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
 /**
  * Created by Ahmed-Mariam on 5/12/2016.
  */
-public class AppController extends Application {
+public class AppController extends Application implements
+        Application.ActivityLifecycleCallbacks  {
 
     public static final String TAG = "AppController";
     private RequestQueue mRequestQueue;
     private boolean isDiscountOn=false;
     private SharedPreferences.Editor editor;
-
-    public String getPrinterIpAddress() {
-        return printerIpAddress;
-    }
-
-    public void setPrinterIpAddress(String printerIpAddress) {
-        this.printerIpAddress = printerIpAddress;
-    }
-
-    private String printerIpAddress = "192.168.2.80";
     private List<LineItem> bag = new ArrayList<LineItem>();
-
-
+    private static AppController mInstance;
     private TrasactionDetails txnDetails = new TrasactionDetails();
     private SharedPreferences sharedpreferences;
-    private static AppController mInstance;
+
     public boolean isDiscountOn() {
         return isDiscountOn;
     }
@@ -114,17 +107,20 @@ public class AppController extends Application {
         return totalCount;
     }
 
+
+
+
+
     @Override
     public void onCreate() {
         super.onCreate();
         JodaTimeAndroid.init(this);
         sharedpreferences = getSharedPreferences("MyPref", Context.MODE_PRIVATE);
         editor = sharedpreferences.edit();
+        SystemConfig.getInstance().setIp(sharedpreferences.getString(AppConstants.PRINTER_IP, AppConstants.PRINTER_DEFAULT_IP));
+        SystemConfig.getInstance().setDay(sharedpreferences.getString(AppConstants.Number_of_Days, AppConstants.DEFAULT_NUMBER_OF_DAYS));
 
-        if(sharedpreferences.getInt("billno",0) == 0){
-            editor.putInt("billno",1);
-            editor.commit();
-        }
+
         mInstance = this;
     }
 
@@ -173,4 +169,50 @@ public class AppController extends Application {
         }
     }
 
+    @Override
+    public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+        System.out.println("onActivityCreated ------- 333sfsfs###");
+    }
+
+    @Override
+    public void onActivityStarted(Activity activity) {
+        System.out.println("onActivityStarted -------333 ###");
+    }
+
+    @Override
+    public void onActivityResumed(Activity activity) {
+        DateFormat formatter = new SimpleDateFormat(AppConstants.DD_MM_YYYY);
+        Date today = new Date();
+        String todaysDate = formatter.format(today);
+        String storedDate = sharedpreferences.getString(AppConstants.TODAYS_DATE, "");
+
+        if(Strings.isNullOrEmpty(storedDate)){
+            editor.putString(AppConstants.TODAYS_DATE,todaysDate);
+            editor.putInt(AppConstants.BILLNO, 1);
+            editor.commit();
+        }else if(!todaysDate.equals(sharedpreferences.getString(AppConstants.TODAYS_DATE,""))){
+            editor.putInt(AppConstants.BILLNO,1);
+            editor.commit();
+        }
+    }
+
+    @Override
+    public void onActivityPaused(Activity activity) {
+        System.out.println("onActivityPaused -------33 ###");
+    }
+
+    @Override
+    public void onActivityStopped(Activity activity) {
+        System.out.println("onActivityStopped -------33 ###");
+    }
+
+    @Override
+    public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+        System.out.println("onActivitySaveInstanceState-------33 ###");
+    }
+
+    @Override
+    public void onActivityDestroyed(Activity activity) {
+        System.out.println("onActivityDestroyed ------- 333###");
+    }
 }

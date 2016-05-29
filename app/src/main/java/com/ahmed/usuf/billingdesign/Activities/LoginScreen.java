@@ -4,27 +4,22 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ahmed.usuf.billingdesign.utili.AppConstants;
 import com.ahmed.usuf.billingdesign.R;
-import com.ahmed.usuf.billingdesign.Volley.AppController;
-import com.ahmed.usuf.billingdesign.utili.HttpClient;
-import com.ahmed.usuf.billingdesign.utili.SystemConfig;
-import com.google.common.base.Strings;
+import com.ahmed.usuf.billingdesign.singleton.AppController;
 
 public class LoginScreen extends AppCompatActivity {
 
-        //DUMMY CREDENTIALS
-        private String[] credentials={"admin","1234"};
+    //DUMMY CREDENTIALS
+        private String[] credentials={AppConstants.DEFAULT_ADMIN, AppConstants.DEFAULT_PASSWORD};
         private android.os.Handler handler;
         private EditText user_ed,pass_ed;
-        private TextView safire;
         HomeScreen m=new HomeScreen();
         @Override
         protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +27,7 @@ public class LoginScreen extends AppCompatActivity {
             setContentView(R.layout.activity_login);
             disableKeyboard();
             user_ed=(EditText)findViewById(R.id.username);
-            user_ed.setText("admin");
+            user_ed.setText(AppConstants.DEFAULT_ADMIN);
             pass_ed=(EditText)findViewById(R.id.password);
             pass_ed.setFocusable(true);
             user_ed.setOnClickListener(new View.OnClickListener() {
@@ -83,41 +78,6 @@ public class LoginScreen extends AppCompatActivity {
          * Validating form
          */
         private void submitForm() {
-
-
-            Thread thread = new Thread(new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    try
-                    {
-                        String[] tab_names = getResources().getStringArray(R.array.printer_ip_address);
-                        for(String ip : tab_names){
-                            String response = new HttpClient().sendMessage("http://"+ip,"");
-
-
-                            Log.i("PRINTER ** CONNECTING ...", "IP ADDRESS *****  "+ ip);
-
-                            if(response.contains("EPSON TMNet WebConfig Ver.1.00")){
-                                Log.i("PRINTER ** CONNECTED ********************", "IP ADDRESS *****  "+ ip);
-                                SystemConfig.getInstance().setIp(ip);
-                                break;
-                            }
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        e.printStackTrace();
-                    }
-                }
-            });
-
-            thread.start();
-
-
-
-
             if (!validateName()) {
                 return;
             }
@@ -137,8 +97,7 @@ public class LoginScreen extends AppCompatActivity {
 
         private boolean validateName() {
             if (user_ed.getText().toString().trim().isEmpty()) {
-                user_ed.setError("This Field should not be Empty");
-                //  requestFocus(user_ed);
+                user_ed.setError(AppConstants.LOGIN_VALIDATION_MESSAGE);
                 return false;
             } else {
                 user_ed.setError(null);
@@ -160,8 +119,6 @@ public class LoginScreen extends AppCompatActivity {
             return true;
         }
 
-
-
         private void requestFocus(View view) {
             if (view.requestFocus()) {
                 getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
@@ -177,5 +134,10 @@ public class LoginScreen extends AppCompatActivity {
         }
 
 
+    @Override
+    protected void onResume() {
+        AppController.getInstance().onActivityResumed(this);
+        super.onResume();
     }
+}
 
