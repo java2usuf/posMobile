@@ -7,29 +7,32 @@
     <application
         android:name=".singleton.AppController"
         android:allowBackup="true"
-        android:icon="@drawable/srm"
+        android:icon="@drawable/mc_icon"
         android:label="@string/app_name"
         android:theme="@style/Theme.AppCompat.Light" >
         <activity
             android:name=".Activities.HomeScreen"
+            android:screenOrientation="portrait"
             android:label="@string/app_name" >
         </activity>
         <activity
             android:name=".Activities.LoginScreen"
+            android:screenOrientation="portrait"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".Activities.DateHistoryScreen"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_config_screen" >
         </activity>
         <activity
             android:name=".Activities.ConfigScreen"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_config_screen" >
         </activity>
     </application>

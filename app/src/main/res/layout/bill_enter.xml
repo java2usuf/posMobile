@@ -22,20 +22,19 @@
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/billlabel"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="1dp"
                 android:textSize="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-
                 <EditText
                     android:id="@+id/billno"
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
+                    android:layout_height="40dp"
                     android:inputType="number"
                     android:imeOptions="actionDone"
                     android:singleLine="true"
                     android:textAllCaps="true"
-                    android:textSize="30dp"
+                    android:textSize="18dp"
                     android:hint="Bill Number"
                     android:textColorHint="@color/colorPrimary"
                     android:gravity="center"
@@ -61,9 +60,6 @@
                     />
             </android.support.design.widget.TextInputLayout>
 
-
-
-
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/pricelayout"
                 android:layout_marginTop="4dp"
@@ -88,9 +84,9 @@
 
 
         <android.support.v7.widget.AppCompatSpinner
-        android:layout_width="match_parent"
+            android:layout_width="match_parent"
             style="@style/Widget.AppCompat.Spinner.Underlined"
-        android:layout_height="50dp" android:scrollbarSize="20dp"
+            android:layout_height="50dp" android:scrollbarSize="20dp"
             android:id="@+id/productname"
             android:gravity="center"
             android:layout_marginTop="10dp"
@@ -103,12 +99,7 @@
             android:id="@+id/qtyspinner"
             android:layout_marginTop="10dp"
             />
-
-
         </LinearLayout>
-
-
-
 </ScrollView>
 
         <Button
