@@ -13,7 +13,14 @@ public class AppConstants {
     public static final String DEFAULT_NUMBER_OF_DAYS = "7";
     public static final String LOGIN_VALIDATION_MESSAGE = "This Field should not be Empty";
     public static final String DEFAULT_ADMIN = "admin";
-    public static final String DEFAULT_PASSWORD = "0000";
+    public static final String DEFAULT_PASSWORD = "2376";
     public static final String MSG_PERCENTAGE_DIALOG = "Enter Percentage or Price to Discount";
     public static final String PRINTER_LINE_FEED = "------------------------------------------------\n";
+    public static final int DATABASE_VERSION = 1;
+    public static final String DATABASE_NAME = "POSMobile";
+    public static final String TABLE_TRANSACTION = "transactionDetail";
+    public static final String KEY_ID = "id";
+    public static final String KEY_FINAL_TOTAL = "finalTotal";
+    public static final String KEY_DATE = "date";
+    public static final String KEY_DISCOUNT_TOTAL = "discountTotal";
 }

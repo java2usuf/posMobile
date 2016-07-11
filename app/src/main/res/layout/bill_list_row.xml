@@ -17,24 +17,7 @@
         android:orientation="horizontal"
         >
 
-        <ImageButton
-            android:src="@drawable/abc_ic_clear_mtrl_alpha"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="-"
-            android:minWidth="0dp"
-            android:textColor="@color/colorPrimary"
-            android:id="@+id/remove"
-            android:layout_margin="0dp"
-            android:layout_marginLeft="0dp"
-            android:layout_marginTop="0dp"
-            android:layout_marginRight="0dp"
-            android:layout_marginBottom="0dp"
-            android:longClickable="true"
-            android:textStyle="bold|normal|italic"
-            android:background="#ffffff"
-            android:height="0dp" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -44,6 +27,21 @@
             android:textStyle="bold"
             android:id="@+id/productTitle"
             />
+
+        <ImageButton
+            android:src="@drawable/cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="-"
+            android:minWidth="0dp"
+            android:textColor="@color/colorPrimary"
+            android:id="@+id/remove"
+            android:background="#ffffff"
+            android:layout_weight="2"
+            android:height="0dp" />
+
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:textColor="#0a1002"

@@ -16,7 +16,6 @@ import com.ahmed.usuf.billingdesign.singleton.AppController;
 
 public class LoginScreen extends AppCompatActivity {
 
-    //DUMMY CREDENTIALS
         private String[] credentials={AppConstants.DEFAULT_ADMIN, AppConstants.DEFAULT_PASSWORD};
         private android.os.Handler handler;
         private EditText user_ed,pass_ed;
@@ -25,24 +24,9 @@ public class LoginScreen extends AppCompatActivity {
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_login);
-            disableKeyboard();
             user_ed=(EditText)findViewById(R.id.username);
             user_ed.setText(AppConstants.DEFAULT_ADMIN);
             pass_ed=(EditText)findViewById(R.id.password);
-            pass_ed.setFocusable(true);
-            user_ed.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    enableKeyboard();
-                }
-            });
-            pass_ed.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    enableKeyboard();
-                }
-            });
-
         }
 
         public int getWidth() {
@@ -91,7 +75,7 @@ public class LoginScreen extends AppCompatActivity {
                 startActivity(i);
                 finish();
             }else {
-                Toast.makeText(getApplicationContext(), "Access not Granted", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Login Failed", Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -137,7 +121,9 @@ public class LoginScreen extends AppCompatActivity {
     @Override
     protected void onResume() {
         AppController.getInstance().onActivityResumed(this);
+
         super.onResume();
+        pass_ed.setFocusable(true);
     }
 }
 

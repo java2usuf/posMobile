@@ -63,12 +63,8 @@ public class DateHistoryAdapter extends RecyclerView.Adapter<DateHistoryAdapter.
 
     @Override
     public void onBindViewHolder(DateHistoryHolder holder, int position) {
-
-
         settingZigZagColor(holder);
         setItems(holder, position);
-
-
     }
 
     private void setItems(DateHistoryHolder holder, int position) {

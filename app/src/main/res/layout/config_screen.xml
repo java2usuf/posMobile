@@ -18,12 +18,12 @@
         android:gravity="center"
         />
 
-      <EditText
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:hint="Enter 0 to 7 days"
-          android:id="@+id/day"
-          />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter 0 to 7 days"
+        android:id="@+id/day"
+        />
 
     <Button
         android:layout_width="match_parent"

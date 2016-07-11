@@ -13,6 +13,7 @@ import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
@@ -24,6 +25,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.ahmed.usuf.billingdesign.Transformation.ShowNumbersTransformationMethod;
 import com.ahmed.usuf.billingdesign.utili.AppConstants;
 import com.ahmed.usuf.billingdesign.DatabaseHandler.DatabaseHandler;
 import com.ahmed.usuf.billingdesign.Fragments.AddItem;
@@ -54,7 +56,6 @@ import java.util.List;
 public class HomeScreen extends AppCompatActivity implements ReceiveListener,BillCallBack,PercentageCallBack {
 
     EditText prc, tot;
-    int totalCount;
     Printer mPrinter;
     public static int width;
     public static int height;
@@ -80,15 +81,13 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener,Bil
         prc = (EditText) findViewById(R.id.pricelabel);
         tot = (EditText) findViewById(R.id.totalLabel);
 
+
         if (viewPager != null) {
-            viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                int currentPosition = 0;
                 @Override
                 public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
                 }
-
-                int currentPosition = 0;
-
                 @Override
                 public void onPageSelected(int newPosition) {
                     fragmentLifeCycle fragmentToShow = (fragmentLifeCycle) adapter.getItem(newPosition);
@@ -97,48 +96,24 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener,Bil
                     fragmentToHide.onPauseFragment();
                     currentPosition = newPosition;
                 }
-
                 @Override
                 public void onPageScrollStateChanged(int state) {
-
                 }
             });
         }
-        final TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(viewPager);
-        tabLayout.setVisibility(View.GONE);
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                View focus;
-                switch (tab.getPosition()) {
-                    case 0:
-                        tabLayout.setVisibility(View.VISIBLE);
-                        focus = getCurrentFocus();
-                        if (focus != null) {
-                            hiddenKeyboard(focus);
-                        }
-                        break;
-                    case 1:
-                        tabLayout.setVisibility(View.GONE);
-                        focus = getCurrentFocus();
-                        if (focus != null) {
-                            hiddenKeyboard(focus);
-                        }
-                        break;
-                }
-            }
 
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-            }
-        });
         display();
     }
+
+
+    private void display() {
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        width = size.x;
+        height = size.y;
+    }
+
 
     private void getSalesReport() {
         LocalDateTime localDateTime = new LocalDateTime();
@@ -155,34 +130,6 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener,Bil
         }
         Toast.makeText(HomeScreen.this, "2354134652-" + billableAmount + "%%7658486543-" + discountAmount, Toast.LENGTH_LONG).show();
     }
-
-    private void display() {
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        width = size.x;
-        height = size.y;
-    }
-
-    public static String rupeeFormat(String value){
-        value=value.replace(",","");
-        char lastDigit=value.charAt(value.length()-1);
-        String result = "";
-        int len = value.length()-1;
-        int nDigits = 0;
-
-        for (int i = len - 1; i >= 0; i--)
-        {
-            result = value.charAt(i) + result;
-            nDigits++;
-            if (((nDigits % 2) == 0) && (i > 0))
-            {
-                result = "," + result;
-            }
-        }
-        return (result+lastDigit);
-    }
-
     private void clearList() {
         AppController.getInstance().getBag().clear();
         ViewCart.mAdapter.swap(AppController.getInstance().getBag());
@@ -192,7 +139,8 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener,Bil
         // custom dialog
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.config_screen);
-        dialog.setTitle("Set Configuration");
+        String title = "System Config";
+        dialog.setTitle(title);
 
         final EditText day,ip;
         final Button save;
@@ -250,6 +198,8 @@ public class HomeScreen extends AppCompatActivity implements ReceiveListener,Bil
         final EditText price, percentage;
         price = (EditText) dialog.findViewById(R.id.pricediscount);
         percentage = (EditText) dialog.findViewById(R.id.percentage);
+        price.setTransformationMethod(new ShowNumbersTransformationMethod());
+        percentage.setTransformationMethod(new ShowNumbersTransformationMethod());
 
         Button dialogButton = (Button) dialog.findViewById(R.id.calculate);
         // if button is clicked, close the custom dialog

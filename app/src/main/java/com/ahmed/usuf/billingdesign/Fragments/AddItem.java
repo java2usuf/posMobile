@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 
+import com.ahmed.usuf.billingdesign.Transformation.ShowNumbersTransformationMethod;
 import com.ahmed.usuf.billingdesign.data.LineItem;
 import com.ahmed.usuf.billingdesign.Interfaces.fragmentLifeCycle;
 import com.ahmed.usuf.billingdesign.R;
@@ -37,7 +38,7 @@ import java.util.List;
 public class AddItem extends Fragment implements fragmentLifeCycle {
     String[] productNames;
     String[] qt;
-    public EditText prc, tot, billno;
+    public EditText priceEidtText, tot, billno;
     AppCompatSpinner pName, qty;
 
     public static List<LineItem> printerList;
@@ -56,7 +57,7 @@ public class AddItem extends Fragment implements fragmentLifeCycle {
 
         pName = (AppCompatSpinner) v.findViewById(R.id.productname);
         qty = (AppCompatSpinner) v.findViewById(R.id.qtyspinner);
-        prc = (EditText) v.findViewById(R.id.pricelabel);
+        priceEidtText = (EditText) v.findViewById(R.id.pricelabel);
         tot = (EditText) v.findViewById(R.id.totalLabel);
         tot.setEnabled(false);
         billno = (EditText) v.findViewById(R.id.billno);
@@ -69,7 +70,9 @@ public class AddItem extends Fragment implements fragmentLifeCycle {
             }
         });
 
-        prc.addTextChangedListener(new TextWatcher() {
+        priceEidtText.setTransformationMethod(new ShowNumbersTransformationMethod());
+
+        priceEidtText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -85,7 +88,7 @@ public class AddItem extends Fragment implements fragmentLifeCycle {
                 try {
                     String buffer;
                     buffer = qty.getSelectedItem().toString();
-                    String priceValue = prc.getText().toString();
+                    String priceValue = priceEidtText.getText().toString();
                     if (!Strings.isNullOrEmpty(priceValue)) {
                         int calculatedAmount = Integer.parseInt(buffer) * Integer.parseInt(priceValue);
                         tot.setText("" + calculatedAmount);
@@ -124,10 +127,10 @@ public class AddItem extends Fragment implements fragmentLifeCycle {
                 if (focus != null) {
                     hiddenKeyboard(focus);
                 }
-                if (prc.getText().toString().isEmpty()) {
+                if (priceEidtText.getText().toString().isEmpty()) {
 
                 } else {
-                    int price = Integer.parseInt(prc.getText().toString());
+                    int price = Integer.parseInt(priceEidtText.getText().toString());
                     price *= Integer.parseInt(qty.getSelectedItem().toString());
                     tot.setText("" + price);
                 }
@@ -161,16 +164,16 @@ public class AddItem extends Fragment implements fragmentLifeCycle {
             hiddenKeyboard(focus);
         }
 
-        if (prc.getText().toString().isEmpty()) {
-            prc.setError("Please Enter Product price");
+        if (priceEidtText.getText().toString().isEmpty()) {
+            priceEidtText.setError("Please Enter Product price");
         } else {
-            prc.setError(null);
+            priceEidtText.setError(null);
             Toast.makeText(AddItem.this.getActivity(), "Adding to the Cart", Toast.LENGTH_LONG).show();
-            AppController.getInstance().getBag().add(new LineItem(qty.getSelectedItem().toString(), prc.getText().toString(), billno.getText().toString(), tot.getText().toString(), pName.getSelectedItem().toString()));
+            AppController.getInstance().getBag().add(new LineItem(qty.getSelectedItem().toString(), priceEidtText.getText().toString(), billno.getText().toString(), tot.getText().toString(), pName.getSelectedItem().toString()));
             ViewCart.mAdapter.swap(AppController.getInstance().getBag());
             qty.setSelection(0);
             pName.setSelection(0);
-            prc.setText("");
+            priceEidtText.setText("");
             tot.setText("");
 
         }

@@ -2,7 +2,7 @@
 
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/main_content" android:background="@drawable/tpt_railway"
+    android:id="@+id/main_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -37,21 +37,17 @@
                 android:layout_marginTop="10dp">
 
                 <EditText
-                    android:textColorHint="@android:color/holo_red_light"
                     android:id="@+id/username"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="UserName" />
-
-
-
+                    android:focusable="false"
+                    android:hint="Username" />
                 <EditText
-                    android:textColorHint="@android:color/holo_red_light"
                     android:id="@+id/password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="numberPassword"
-                    android:hint="PassWord" />
+                    android:hint="Password" />
                 <requestFocus />
 
 
@@ -59,7 +55,6 @@
 
             <Button
                 android:id="@+id/angry_btn"
-
                 android:text="Login"
                 android:textColor="#FFFFFF"
                 android:textSize="22sp"
@@ -73,7 +68,6 @@
                 android:shadowDy="0"
                 android:shadowRadius="5"
                 android:onClick="login" />
-
 
         </LinearLayout>
     </ScrollView>

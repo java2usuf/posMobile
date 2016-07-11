@@ -9,7 +9,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.ahmed.usuf.billingdesign.Adapters.ConfigListAdapter;
-import com.ahmed.usuf.billingdesign.Adapters.DateHistoryAdapter;
 import com.ahmed.usuf.billingdesign.DatabaseHandler.DatabaseHandler;
 import com.ahmed.usuf.billingdesign.R;
 
@@ -23,7 +22,7 @@ public class ConfigScreen extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.onfig_screen);
+        setContentView(R.layout.config_screen);
 
         db=new DatabaseHandler(this);
 
