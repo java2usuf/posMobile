@@ -1,6 +1,8 @@
 <LinearLayout
-    android:layout_width="fill_parent" android:layout_height="fill_parent" android:orientation="vertical"
-    xmlns:android="http://schemas.android.com/apk/res/android" >
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
 
     <LinearLayout
@@ -10,15 +12,25 @@
         android:background="@android:color/transparent"
         android:orientation="vertical"
         android:layout_marginTop="5dp">
+
         <AutoCompleteTextView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" android:textColorHint="@android:color/black"  android:background="#90ffffff" android:drawableBottom="@android:drawable/divider_horizontal_dim_dark"
-            android:id="@+id/auto" android:imeOptions="actionNext" android:completionThreshold="1" android:singleLine="true" android:focusableInTouchMode="true"
-            />
+            android:layout_height="wrap_content"
+            android:textColorHint="@android:color/black"
+            android:background="#90ffffff"
+            android:drawableBottom="@android:drawable/divider_horizontal_dim_dark"
+            android:id="@+id/auto"
+            android:imeOptions="actionNext"
+            android:completionThreshold="1"
+            android:singleLine="true"
+            android:focusableInTouchMode="true" />
 
         <TableRow
-            android:layout_height="wrap_content" android:layout_width="match_parent" android:orientation="horizontal" android:background="#90ffffff"
-            >
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:background="#90ffffff">
+
             <EditText
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -27,28 +39,27 @@
                 android:textColorHint="@android:color/black"
                 android:ems="6"
                 android:layout_weight="1"
-                android:id="@+id/price"
-                />
+                android:id="@+id/price" />
 
             <EditText
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:hint="Qty"
                 android:ems="6"
-                android:layout_weight="1" android:imeOptions="actionDone"
+                android:layout_weight="1"
+                android:imeOptions="actionDone"
                 android:id="@+id/qty"
-                android:textColorHint="@android:color/black"
-                />
+                android:textColorHint="@android:color/black" />
 
             <EditText
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:hint="Total"
                 android:ems="6"
-                android:layout_weight="1" android:imeOptions="actionDone"
+                android:layout_weight="1"
+                android:imeOptions="actionDone"
                 android:id="@+id/total"
-                android:textColorHint="@android:color/black"
-                />
+                android:textColorHint="@android:color/black" />
 
         </TableRow>
 
@@ -57,14 +68,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="10dp"
-            >
+            android:layout_marginTop="10dp">
+
             <TextView
-                android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"/>
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
 
             <Button
                 android:id="@+id/button"
-                android:onClick="add" android:textStyle="italic"
+                android:onClick="add"
+                android:textStyle="italic"
                 android:text="Add"
                 android:layout_weight="1"
                 android:textColor="#fff6ff0b"
@@ -77,14 +91,12 @@
                 android:shadowColor="#A83939"
                 android:shadowDx="0"
                 android:shadowDy="0"
-                android:shadowRadius="5"
-                />
+                android:shadowRadius="5" />
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                />
+                android:layout_weight="1" />
 
             <Button
                 android:id="@+id/bill"
@@ -101,12 +113,13 @@
                 android:shadowColor="#A83939"
                 android:shadowDx="0"
                 android:shadowDy="0"
-                android:shadowRadius="5"
-                />
+                android:shadowRadius="5" />
 
             <TextView
-                android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
-                />
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
             <Button
                 android:onClick="clear"
                 android:text="clear"
@@ -121,12 +134,12 @@
                 android:shadowColor="#A83939"
                 android:shadowDx="0"
                 android:shadowDy="0"
-                android:shadowRadius="5"
-                />
+                android:shadowRadius="5" />
 
             <TextView
-                android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
-                />
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
         </TableRow>
     </LinearLayout>
 

@@ -4,11 +4,11 @@ android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
     defaultConfig {
-        applicationId "com.ahmed.usuf.billingdesign"
-        minSdkVersion 11
+        applicationId "com.srm.billpodo.billing"
+        minSdkVersion 15
         targetSdkVersion 23
-        versionCode 7
-        versionName "2.5"
+        versionCode 5
+        versionName "5"
     }
     buildTypes {
         release {
@@ -23,6 +23,11 @@ android {
         jniLibs.srcDir 'src/main/jni'
         jni.srcDirs = [] //disable automatic ndk-build call
     }
+    repositories {
+        maven {
+            url 'https://dl.bintray.com/spark/maven'
+        }
+    }
 }
 
 dependencies {
@@ -33,5 +38,21 @@ dependencies {
     compile 'com.google.guava:guava:19.0'
     compile 'com.mcxiaoke.volley:library-aar:1.0.0'
     compile 'net.danlew:android.joda:2.9.3'
+    //Button Library
+    compile 'me.spark:submitbutton:1.0.1'
+    compile 'com.google.code.gson:gson:2.2.4'
+
+    compile 'com.intuit.sdp:sdp-android:1.0.3'
+    compile 'com.github.medyo:fancybuttons:1.8.1'
+
+    compile 'com.google.firebase:firebase-auth:9.6.1'
+    compile 'com.google.firebase:firebase-core:9.6.1'
+    compile 'com.google.firebase:firebase-ads:9.6.1'
+    compile 'com.google.firebase:firebase-messaging:9.6.1'
+    compile 'com.google.firebase:firebase-config:9.6.1'
+    compile 'com.google.firebase:firebase-database:9.6.1'
+
+
     compile files('libs/ePOS2.jar')
 }
+apply plugin: 'com.google.gms.google-services'

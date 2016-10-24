@@ -6,7 +6,8 @@
     android:orientation="vertical">
 
     <TableRow
-        android:layout_width="match_parent" android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
         android:layout_height="wrap_content">
 
         <TextView

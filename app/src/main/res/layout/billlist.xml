@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2015 The Android Open Source Project
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,24 +16,24 @@
 <RelativeLayout
     android:layout_height="match_parent"
     android:layout_width="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android">
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Empty Cart!"
+        android:text=""
         android:textSize="80dp"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:layout_marginTop="380dp"
         android:gravity="center"
-        android:id="@+id/empty"
-        />
-<android.support.v7.widget.RecyclerView
-    android:id="@+id/recyclerview"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content" />
+        android:id="@+id/empty" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <Button
         android:id="@+id/discount"
@@ -53,8 +52,7 @@
         android:gravity="center"
         android:shadowDx="1"
         android:shadowDy="0"
-        android:shadowRadius="5"
-        />
+        android:shadowRadius="5" />
 
     <Button
         android:id="@+id/bill"
@@ -73,7 +71,6 @@
         android:gravity="center"
         android:shadowDx="1"
         android:shadowDy="0"
-        android:shadowRadius="5"
-        />
+        android:shadowRadius="5" />
 
-  </RelativeLayout>
+</RelativeLayout>

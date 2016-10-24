@@ -3,72 +3,94 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main_content"
-    android:layout_width="match_parent"
+    android:paddingTop="56dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:background="@color/cardview_light_background"
+    android:layout_width="match_parent" android:orientation="vertical"
     android:layout_height="match_parent">
+<!--<include layout="@layout/toolbar" android:id="@+id/toolbar"/>-->
 
     <ScrollView
-        android:layout_width="fill_parent" android:layout_height="fill_parent"
-        >
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
         <LinearLayout
-            android:layout_width="fill_parent" android:layout_gravity="center_vertical"
+            android:layout_width="fill_parent"
+            android:layout_gravity="center_vertical"
             android:layout_height="fill_parent"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:paddingTop="10dp"
+            android:paddingLeft="2dp"
+            android:paddingRight="2dp"
             android:orientation="vertical">
+
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="25sp"
-                android:text="SRM Billing Application"
+                android:text="Bill-PoDo"
+
                 android:id="@+id/safire"
                 android:layout_gravity="center_horizontal"
                 android:typeface="serif"
                 android:textStyle="bold|italic"
-                android:textColor="#fdfffc0f"
-                />
+                android:textColor="@color/accent_material_light" />
 
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:background="#50ffffff"
                 android:layout_marginTop="10dp">
 
-                <EditText
-                    android:id="@+id/username"
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/totallayout"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:focusable="false"
-                    android:hint="Username" />
-                <EditText
-                    android:id="@+id/password"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="numberPassword"
-                    android:hint="Password" />
-                <requestFocus />
+                    app:hintTextAppearance="@style/TextAppearence.App.TextInputLayout"
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        android:id="@+id/username"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Username"
+                        android:inputType="text"
+                        android:textSize="20dp"
+                        android:gravity="left"
+                        />
+                </android.support.design.widget.TextInputLayout>
 
 
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    app:hintTextAppearance="@style/TextAppearence.App.TextInputLayout"
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        android:id="@+id/password"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Password"
+                        android:inputType="numberPassword"
+                        android:textSize="20dp"
+                        android:gravity="left"
+                        />
+
+                    <requestFocus />
+                </android.support.design.widget.TextInputLayout>
+                <android.support.v7.widget.AppCompatButton
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="LOGIN"
+                    android:layout_margin="15dp"
+                    android:textColor="@color/colorAccent"
+                    android:background="@color/colorPrimaryDark"
+                    android:padding="12dp"
+                    android:id="@+id/login"
+                    android:layout_gravity="center"
+                    android:textSize="20dp"
+                    />
             </LinearLayout>
-
-            <Button
-                android:id="@+id/angry_btn"
-                android:text="Login"
-                android:textColor="#FFFFFF"
-                android:textSize="22sp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="30dp"
-                android:layout_width="209dp"
-                android:layout_height="43dp"
-                android:background="@drawable/btn_style"
-                android:shadowColor="#A83939"
-                android:shadowDx="0"
-                android:shadowDy="0"
-                android:shadowRadius="5"
-                android:onClick="login" />
-
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
